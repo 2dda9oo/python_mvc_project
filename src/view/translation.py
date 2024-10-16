@@ -138,7 +138,7 @@ class Ui_Dialog(object):
         #dictionary 입력값
         self.dictinary_name = None
         #xml 파일 입력 값
-        self.xml_list = {}
+        self.xml_name = None
 
         #파일 input 버튼 클릭 이벤트 모음
         self.pushButton.clicked.connect(self.opne_dictionary_dialog)
@@ -172,11 +172,11 @@ class Ui_Dialog(object):
 
     #xml 파일들 입력(복수)
     def opne_xmls_dialog(self):
-        files_path, _ = QFileDialog.getOpenFileNames(self.dialog, 'Open file')
+        file_path, _ = QFileDialog.getOpenFileName(self.dialog, 'Open file')
 
-        for file in files_path[0]:
-            current_line = self.xml_line.toPlainText()
-            self.xml_line.setText(current_line + file + ',')
+        if file_path:
+            self.xml_name = file_path
+            self.lineEdit_2.setText(file_path)
             
 
     
