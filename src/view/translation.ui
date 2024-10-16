@@ -21,7 +21,7 @@
   <property name="styleSheet">
    <string notr="true">background-color:rgb(220, 220, 220);</string>
   </property>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="di_search">
    <property name="geometry">
     <rect>
      <x>402</x>
@@ -42,7 +42,7 @@
     <string>Search</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit">
+  <widget class="QLineEdit" name="dictionary_line">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -105,7 +105,7 @@ border: 2px solid rgb(0, 200, 240);
     <bool>false</bool>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_2">
+  <widget class="QPushButton" name="xml_search">
    <property name="geometry">
     <rect>
      <x>402</x>
@@ -126,7 +126,7 @@ border: 2px solid rgb(0, 200, 240);
     <string>Search</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit_2">
+  <widget class="QLineEdit" name="xml_line">
    <property name="geometry">
     <rect>
      <x>20</x>
