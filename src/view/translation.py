@@ -142,7 +142,7 @@ class Ui_Dialog(object):
 
         #파일 input 버튼 클릭 이벤트 모음
         self.pushButton.clicked.connect(self.opne_dictionary_dialog)
-        self.pushButton_2.clicked.connect(self.opne_xmls_dialog)
+        self.pushButton_2.clicked.connect(self.opne_xml_dialog)
 
 
     def retranslateUi(self, Dialog):
@@ -170,8 +170,8 @@ class Ui_Dialog(object):
             self.lineEdit.setText(file_path)
 
 
-    #xml 파일들 입력(복수)
-    def opne_xmls_dialog(self):
+    #xml 파일들 입력(단일)
+    def opne_xml_dialog(self):
         file_path, _ = QFileDialog.getOpenFileName(self.dialog, 'Open file')
 
         if file_path:
