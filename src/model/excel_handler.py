@@ -6,7 +6,7 @@ import xml.etree.ElementTree as ET
 #딕셔너리 파일 로드
 def load_dictionary(di_path):
 
-    df = pd.read_excel(di_path, usecols="B,G:AN")
+    df = pd.read_excel(di_path, usecols="C,G:AN")
     language_code = ["es", "ko", "de", "zh", "fr", "it", "sv", "nb", "br", "pt", "tk", "ru", "nl", "da", "fi", "id", "sl"
     , "sk", "pl", "lv", "lt", "hu", "et", "el", "cs", "iw", "ar", "hi", "th", "bg", "ro", "is", "hr", "ja"]
 
