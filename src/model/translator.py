@@ -1,6 +1,5 @@
 import xml.etree.ElementTree as ET
 import os
-import model.excel_handler as EH
 from .excel_handler import language_code
 from model.excel_handler import InputTranslatrionFile
 
@@ -17,7 +16,7 @@ class Translator:
 
     def translate_xml(self):
         output_paths = {}
-        excel_dictionary = EH.load_dictionary(self.di_path)
+        excel_dictionary = self.inputTranslation.load_dictionary(self.di_path)
         # 처음 5개의 키와 값 출력
         for i, (key, value) in enumerate(excel_dictionary.items()):
             if i < 5:  # 처음 5개 항목만 출력
