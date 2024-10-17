@@ -18,8 +18,8 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         self.ui.setupUi(self)
  
         # 이벤트 연결
-        self.ui.pushButton.clicked.connect(self.open_dictionary_dialog)  # 사전 파일 선택 버튼
-        self.ui.pushButton_2.clicked.connect(self.open_xml_dialog)  # XML 파일 선택 버튼
+        self.ui.di_search.clicked.connect(self.open_dictionary_dialog)  # 사전 파일 선택 버튼
+        self.ui.xml_search.clicked.connect(self.open_xml_dialog)  # XML 파일 선택 버튼
         self.ui.pushButton_4.clicked.connect(self.start_translation)  # 번역 시작 버튼
  
         self.xml_name = None   #dictionary 입력값
@@ -41,7 +41,7 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         
         if file_path:
             self.dict_name = file_path
-            self.ui.lineEdit.setText(file_path)
+            self.ui.dictionary_line.setText(file_path)
 
             controller = LocaleInfo(di_path=self.dict_name, xml_path="")
             self.locale_list = controller.getLocaleList()
@@ -61,7 +61,7 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         
         if file_path:
             self.xml_name = file_path
-            self.ui.lineEdit_2.setText(file_path)
+            self.ui.xml_line.setText(file_path)
  
             path_parts = file_path.replace("\\", "/").split('/')
             res_index = path_parts.index('res')
