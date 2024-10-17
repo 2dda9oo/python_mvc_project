@@ -1,6 +1,8 @@
 import pandas as pd
 import xml.etree.ElementTree as ET
 
+language_code = ["es", "ko", "de", "zh", "fr", "it", "sv", "nb", "br", "pt", "tk", "ru", "nl", "da", "fi", "id", "sl"
+    , "sk", "pl", "lv", "lt", "hu", "et", "el", "cs", "iw", "ar", "hi", "th", "bg", "ro", "is", "hr", "ja"]
 
 
 class InputTranslatrionFile:

@@ -4,6 +4,8 @@ from PyQt5.QtWidgets import QFileDialog
 from controller.translator_controller import TranslatorController
 from controller.translator_controller import LocaleInfo
 import os
+import warnings
+from openpyxl import load_workbook
 
 from PyQt5.QtWidgets import QDialog, QLineEdit, QPushButton, QFileDialog, QVBoxLayout, QApplication
 from PyQt5.QtCore import QStringListModel
@@ -30,6 +32,7 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
  
     # 번역사전 엑셀 파일 입력(단일)
     def open_dictionary_dialog(self):
+        warnings.filterwarnings("ignore", category=UserWarning, module='openpyxl')
         file_path, _ = QFileDialog.getOpenFileName(self, 'Open Dictionary File', "", "Excel Files (*.xlsx)")
 
         if not os.path.isfile(file_path):
@@ -74,7 +77,7 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
             return
        
         controller = TranslatorController(di_path=self.dict_name, xml_path=self.xml_name, base_dir=self.value_root)
-        controller.translate(self.xml_name)
+        controller.translate()
         print("Translation completed.")
  
  
