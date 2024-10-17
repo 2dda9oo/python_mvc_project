@@ -1,5 +1,6 @@
 import os
 from model.translator import Translator
+from model.translator import LocaleViewer
 
 class TranslatorController:
     def __init__(self, di_path="dictionary.xlsx", xml_path="strings.xml", base_dir="output"):
@@ -16,8 +17,13 @@ class TranslatorController:
         self.translator.translate_xml(input_file)
         print("Translation completed.")
 
-if __name__ == "__main__":
-    # 사용자 입력 처리
-    input_file = input("Enter the path to the XML file you want to translate: ")
-    controller = TranslatorController()
-    controller.translate(input_file)
+
+class LocaleInfo:
+    def __init__(self, di_path="", xml_path=""):
+        print("translation path:", di_path)
+        #LocaleViewr 인스턴스 초기화
+        self.translator = LocaleViewer(di_path, xml_path)
+
+    #입력한 translation 파일의 언어 리스트 get
+    def getLocaleList(self):
+        return self.translator.get_country_name()
