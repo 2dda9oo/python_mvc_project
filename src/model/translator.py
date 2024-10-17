@@ -14,7 +14,7 @@ class Translator:
         self.notFoundList = [] #번역안된 name List들
         self.output_paths = {}
         self.inputTranslation = InputTranslatrionFile(di_path, xml_path)
-        
+
     def translate_xml(self):
         output_paths = {}
         excel_dictionary = EH.load_dictionary(self.di_path)
@@ -84,7 +84,7 @@ class Translator:
                     new_string.text = text
 
                     self.save_xml_file(new_string, code)
-            
+
 
     #저장
     def save_xml_file(self,new_string, code):
