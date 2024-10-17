@@ -134,15 +134,7 @@ class Ui_Dialog(object):
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
-        self.dialog = Dialog
-        #dictionary 입력값
-        self.dictinary_name = None
-        #xml 파일 입력 값
-        self.xml_name = None
-
-        #파일 input 버튼 클릭 이벤트 모음
-        self.pushButton.clicked.connect(self.opne_dictionary_dialog)
-        self.pushButton_2.clicked.connect(self.opne_xml_dialog)
+        
 
 
     def retranslateUi(self, Dialog):
@@ -158,39 +150,3 @@ class Ui_Dialog(object):
         self.label_6.setText(_translate("Dialog", "Target Language"))
         self.pushButton_3.setText(_translate("Dialog", "Save"))
         self.pushButton_4.setText(_translate("Dialog", "Translation"))
-
-
-
-    #번역사전 엑셀 파일 입력(단일)
-    def opne_dictionary_dialog(self):
-        file_path, _ = QFileDialog.getOpenFileName(self.dialog, 'Open file')
-        
-        if file_path:
-            self.dictinary_name = file_path
-            self.lineEdit.setText(file_path)
-
-
-    #xml 파일들 입력(단일)
-    def opne_xml_dialog(self):
-        file_path, _ = QFileDialog.getOpenFileName(self.dialog, 'Open file')
-
-        if file_path:
-            self.xml_name = file_path
-            self.lineEdit_2.setText(file_path)
-            
-
-    
-    #번역 시작
-    #def start_translation(self):
-    
-
-    
-if __name__ == "__main__":
-        import sys
-        app = QtWidgets.QApplication(sys.argv)
-        window = QtWidgets.QDialog()
-        ui = Ui_Dialog()
-        ui.setupUi(window)
-        window.show()
-
-        sys.exit(app.exec_())

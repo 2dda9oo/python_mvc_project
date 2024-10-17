@@ -1,6 +1,6 @@
 import xml.etree.ElementTree as ET
 import os
-import model.excel_handler as EH
+from model.excel_handler import InputTranslatrionFile
 
 class Translator:
 
@@ -10,11 +10,12 @@ class Translator:
         self.base_dir = base_dir
         self.matchedWordList = [] #번역된 name List들
         self.notFoundList = [] #번역안된 name List들
+        self.inputTranslation = InputTranslatrionFile(di_path, xml_path)
 
 
     def translate_xml(self, input_file):
         output_paths = {}
-        excel_dictionary = EH.load_dictionary(self.di_path)
+        excel_dictionary = self.inputTranslation.load_dictionary(self.di_path)
         language_code = list(excel_dictionary[next(iter(excel_dictionary))].keys())
         input_file_name = os.path.basename(input_file)
 
@@ -78,5 +79,14 @@ class Translator:
         new_root.append(new_string)
         new_tree = ET.ElementTree(new_root)
         new_tree.write(output_path, encoding="utf-8", xml_declaration=True)
+    
 
+class LocaleViewer:
+    def __init__(self, di_path="", xml_path=""):
+        self.di_path=di_path
+        self.inputTranslation = InputTranslatrionFile(di_path, xml_path)
 
+    #언어 리스트 가져오기
+    def get_country_name(self):
+        return self.inputTranslation.load_country()
+        
