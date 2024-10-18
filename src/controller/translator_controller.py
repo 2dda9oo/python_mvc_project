@@ -31,3 +31,4 @@ class TranslatorController:
         not_found_list = self.translator.notFoundList
         content_list = self.translator.content_list
         self.start_second_stage_translation(not_found_list, content_list)
+
