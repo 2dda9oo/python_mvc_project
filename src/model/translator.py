@@ -65,6 +65,7 @@ class Translator:
 
                         print("name, text: " + ET.tostring(new_string, encoding='unicode'))  # XML 요소 문자열로 변환
                         self.save_xml_file(new_string, code)
+                self.matchedWordList.append(name)
 
             else:
                 print("Content List:", content_list)
@@ -72,11 +73,12 @@ class Translator:
                 print(f"{name} is not found in the dictionary.")
                 
                 for code in language_code:
-                    self.notFoundList.append(name)
                     new_string = ET.Element("string", name=name)
                     new_string.text = text
                     print("name, text: " + ET.tostring(new_string, encoding='unicode'))  # XML 요소 문자열로 변환
                     self.save_xml_file(new_string, code)
+
+                self.notFoundList.append(name)
 
 
     def save_xml_file(self, new_string, code):
