@@ -31,5 +31,5 @@ class TranslatorController:
         return self.translator.getMatchedWordList()
 
     def getNotFound(self):
-        return self.translator.getNotFoundList()        
+        return self.translator.getNotFoundList()
 

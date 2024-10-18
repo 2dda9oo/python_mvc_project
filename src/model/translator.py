@@ -197,5 +197,3 @@ class Translator:
                     new_string.text = name_content
                     print("replace file content: " + ET.tostring(new_string, encoding='unicode'))
                     self.save_xml_file(new_string, code)
-    
-
