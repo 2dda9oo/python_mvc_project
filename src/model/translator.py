@@ -91,7 +91,7 @@ class Translator:
                     self.save_xml_file(new_string, code)
 
                 self.notFoundList[name]=text
-                
+
 
     def save_xml_file(self, new_string, code):
         tree = ET.parse(self.output_paths[code])
