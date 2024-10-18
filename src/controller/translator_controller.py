@@ -22,14 +22,4 @@ class TranslatorController:
         self.translator.translate_xml()
         print("Translation completed.")
 
-
-
-class LocaleInfo:
-    def __init__(self, di_path="", xml_path=""):
-        print("translation path:", di_path)
-        #LocaleViewr 인스턴스 초기화
-        self.translator = LocaleViewer(di_path, xml_path)
-
-    #입력한 translation 파일의 언어 리스트 get
-    def getLocaleList(self):
-        return self.translator.get_country_name()
+        
