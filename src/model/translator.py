@@ -88,6 +88,7 @@ class Translator:
                         self.save_xml_file(new_string, code)
                 self.matched_word_list.append(text)
 
+
             else:
                 print("Content List:", self.content_list)
 
@@ -99,6 +100,7 @@ class Translator:
                     self.save_xml_file(new_string, code)
 
                 self.not_found_list[name]=text
+
 
 
     def save_xml_file(self, new_string, code):
