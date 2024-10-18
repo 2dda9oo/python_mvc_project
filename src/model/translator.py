@@ -72,6 +72,7 @@ class Translator:
                         self.save_xml_file(new_string, code)
                 self.matchedWordList.append(text)
 
+
             else:
                 print("Content List:", self.content_list)
 
