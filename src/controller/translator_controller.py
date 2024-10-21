@@ -1,6 +1,8 @@
 import os
 from model.translator import Translator
-from model.translator import LocaleViewer
+from model.locale_viewer import LocaleViewer
+from controller.locale_info import LocaleInfo
+from model.need_check_translator import Need_check_Translator
 
 
 class TranslatorController:
@@ -12,6 +14,7 @@ class TranslatorController:
         print("di_path:"+di_path+", xml_path:"+xml_path+"base_dit:"+base_dir)
 
     def translate(self):
+
         # 입력 파일 경로가 존재하는지 확인
         if not os.path.isfile(self.xml_path):
             print(f"Input file '{self.xml_path}' does not exist.")
@@ -19,7 +22,20 @@ class TranslatorController:
         
         print(f"xml_file: '{self.xml_path}'")
     
+        #1단계 번역 시작
         self.translator.translate_xml()
         print("Translation completed.")
 
-        
+        # 번역되지 않은 리스트 및 콘텐츠 리스트 가져오기
+        not_found_list = self.translator.notFoundList
+        content_list = self.translator.content_list
+        self.start_second_stage_translation(not_found_list, content_list)
+
+
+    def start_second_stage_translation(self, not_found_list, content_list):
+        # NeedCheckTranslator 인스턴스 생성
+        need_check_translator = Need_check_Translator(not_found_list, content_list)
+        # 2단계 번역 시작import os
+        need_check_translator.checkTranslate()
+        print("Second stage translation completed.")
+
