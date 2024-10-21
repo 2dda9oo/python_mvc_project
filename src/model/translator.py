@@ -4,6 +4,7 @@ from model.excel_handler import InputTranslatrionFile
 from .excel_handler import language_code
 import re
 import json
+import re
 
 
 class Translator:
@@ -92,6 +93,7 @@ class Translator:
                 print("Content List:", self.content_list)
 
                 print(f"{text} is not found in the dictionary.")
+
                 
                 for code in language_code:
                     new_string = ET.Element("string", name=name)
@@ -165,7 +167,6 @@ class Translator:
 
         text_list = list(self.not_need_check_dict.values())
         print("Not Found List:", text_list)
-
         for name, text in self.not_need_check_dict.items():
             split_chars = r'[\n\(\)\-\!\$]'
             splited_list = re.split(split_chars, text)
@@ -195,3 +196,4 @@ class Translator:
                     new_string.text = name_content
                     print("replace file content: " + ET.tostring(new_string, encoding='unicode'))
                     self.save_xml_file(new_string, code)
+
