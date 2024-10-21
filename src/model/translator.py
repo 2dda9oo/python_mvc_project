@@ -4,6 +4,8 @@ from model.excel_handler import InputTranslatrionFile
 import json
 from .excel_handler import language_code
 import re
+import json
+
 
 
 class Translator:
@@ -33,7 +35,6 @@ class Translator:
         self.content_list = list(excel_dictionary.keys())
         tree = ET.parse(self.xml_path)
         root = tree.getroot()
-
         self.process_xml_strings(root, excel_dictionary)
         
 
@@ -71,7 +72,6 @@ class Translator:
 
                         self.save_xml_file(new_string, code)
                 self.matchedWordList.append(text)
-
 
             else:
                 print("Content List:", self.content_list)
