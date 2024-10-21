@@ -32,3 +32,4 @@ class TranslatorController:
     def getNotFound(self):
         return self.translator.getNotFoundList()
 
+

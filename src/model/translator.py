@@ -53,7 +53,7 @@ class Translator:
         print("3nd Translation completed.")
 
         return self.need_check_dict
-    
+
      #각 언어 코드에 해당하는 디렉토리와 xml 파일 생성
     def create_output_directories(self, language_code, input_file_name):
         for code in language_code:
@@ -93,7 +93,6 @@ class Translator:
                 print("Content List:", self.content_list)
 
                 print(f"{text} is not found in the dictionary.")
-
                 
                 for code in language_code:
                     new_string = ET.Element("string", name=name)
@@ -111,7 +110,7 @@ class Translator:
 
 
     #Second Stage Translate
-    def prepare_formatted_data(self):
+    def prepare_formatted_data(self, content_list):
         for name, not_found_text in self.not_found_list.items():
             formatted_text = not_found_text.replace(" ","").upper()
             self.formatted_text_dict[name] = {
@@ -122,7 +121,7 @@ class Translator:
         #formatted_text_dict 확인
         formatted_items = "\n".join([f"{key}: {value}" for key, value in self.formatted_text_dict.items()])
         print("formatted_text - not_found_text:\n" + formatted_items)
-        for content in self.content_list:
+        for content in content_list:
             content_str = str(content) if content is not None else ""
             formatted_content = content_str.replace(" ","").upper()
             self.formatted_translation_content_dict[content] = formatted_content
@@ -163,8 +162,7 @@ class Translator:
     
 
     #특수기호 구분 번역
-    def translateMissMatched(self, excel_dictionary):
-
+    def translateMissMatched(self, excel_dictionary, language_code):
         text_list = list(self.not_need_check_dict.values())
         print("Not Found List:", text_list)
         for name, text in self.not_need_check_dict.items():
@@ -196,4 +194,5 @@ class Translator:
                     new_string.text = name_content
                     print("replace file content: " + ET.tostring(new_string, encoding='unicode'))
                     self.save_xml_file(new_string, code)
+
 
