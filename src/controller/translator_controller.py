@@ -2,7 +2,6 @@ import os
 from model.translator import Translator
 from model.locale_viewer import LocaleViewer
 from controller.locale_info import LocaleInfo
-from model.need_check_translator import Need_check_Translator
 
 
 class TranslatorController:
