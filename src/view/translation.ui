@@ -21,7 +21,7 @@
   <property name="styleSheet">
    <string notr="true">background-color:rgb(220, 220, 220);</string>
   </property>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="di_search">
    <property name="geometry">
     <rect>
      <x>402</x>
@@ -42,7 +42,7 @@
     <string>Search</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit">
+  <widget class="QLineEdit" name="dictionary_line">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -105,7 +105,7 @@ border: 2px solid rgb(0, 200, 240);
     <bool>false</bool>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_2">
+  <widget class="QPushButton" name="xml_search">
    <property name="geometry">
     <rect>
      <x>402</x>
@@ -126,7 +126,7 @@ border: 2px solid rgb(0, 200, 240);
     <string>Search</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit_2">
+  <widget class="QLineEdit" name="xml_line">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -153,32 +153,6 @@ border: 2px solid rgb(0, 200, 240);
    <property name="styleSheet">
     <string notr="true">background-color:rgb(206, 206, 206);
 border: 2px solid rgb(159,159,159);</string>
-   </property>
-  </widget>
-  <widget class="QTableView" name="tableView">
-   <property name="geometry">
-    <rect>
-     <x>770</x>
-     <y>110</y>
-     <width>221</width>
-     <height>631</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color:rgb(255, 255, 255);</string>
-   </property>
-  </widget>
-  <widget class="QTableView" name="tableView_2">
-   <property name="geometry">
-    <rect>
-     <x>520</x>
-     <y>110</y>
-     <width>221</width>
-     <height>631</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color:rgb(255, 255, 255);</string>
    </property>
   </widget>
   <widget class="QTableView" name="tableView_3">
@@ -327,37 +301,12 @@ border: 2px solid rgb(159,159,159);
     <string>Translation</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_7">
+  <widget class="QLabel" name="matched_text">
    <property name="geometry">
     <rect>
      <x>520</x>
      <y>110</y>
-     <width>111</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">border: 2px solid rgb(159,159,159);</string>
-   </property>
-   <property name="frameShape">
-    <enum>QFrame::Box</enum>
-   </property>
-   <property name="lineWidth">
-    <number>1</number>
-   </property>
-   <property name="text">
-    <string>English Text</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_8">
-   <property name="geometry">
-    <rect>
-     <x>630</x>
-     <y>110</y>
-     <width>111</width>
+     <width>221</width>
      <height>21</height>
     </rect>
    </property>
@@ -377,7 +326,7 @@ border: 2px solid rgb(159,159,159);
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QLabel" name="label_10">
+  <widget class="QLabel" name="not_find_text">
    <property name="geometry">
     <rect>
      <x>770</x>
@@ -396,7 +345,7 @@ border: 2px solid rgb(159,159,159);
     <number>1</number>
    </property>
    <property name="text">
-    <string>Find Text</string>
+    <string>not match</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
@@ -475,6 +424,44 @@ border: 2px solid rgb(159,159,159);
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QListView" name="not_found_list">
+   <property name="geometry">
+    <rect>
+     <x>770</x>
+     <y>130</y>
+     <width>221</width>
+     <height>611</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color:rgb(255, 255, 255);</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="lineWidth">
+    <number>2</number>
+   </property>
+  </widget>
+  <widget class="QListView" name="match_list">
+   <property name="geometry">
+    <rect>
+     <x>520</x>
+     <y>130</y>
+     <width>221</width>
+     <height>611</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color:rgb(255, 255, 255);</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="lineWidth">
+    <number>2</number>
    </property>
   </widget>
  </widget>

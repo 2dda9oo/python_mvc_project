@@ -26,16 +26,8 @@ class TranslatorController:
         self.translator.translate_xml()
         print("Translation completed.")
 
+
         # 번역되지 않은 리스트 및 콘텐츠 리스트 가져오기
         not_found_list = self.translator.notFoundList
         content_list = self.translator.content_list
         self.start_second_stage_translation(not_found_list, content_list)
-
-
-    def start_second_stage_translation(self, not_found_list, content_list):
-        # NeedCheckTranslator 인스턴스 생성
-        need_check_translator = Need_check_Translator(not_found_list, content_list)
-        # 2단계 번역 시작import os
-        need_check_translator.checkTranslate()
-        print("Second stage translation completed.")
-

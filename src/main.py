@@ -28,6 +28,8 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         self.locale_list = {} #국가명 가져올 리스트
 
         self.listModel = QStringListModel()
+        self.matchList = QStringListModel()
+        self.notFoundList = QStringListModel()
         
  
     # 번역사전 엑셀 파일 입력(단일)
@@ -78,6 +80,12 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
        
         controller = TranslatorController(di_path=self.dict_name, xml_path=self.xml_name, base_dir=self.value_root)
         controller.translate()
+
+        self.matchList.setStringList(controller.getMatched())
+        self.notFoundList.setStringList(controller.getNotFound())
+        self.ui.match_list.setModel(self.matchList)
+        self.ui.not_found_list.setModel(self.notFoundList)
+
         print("Translation completed.")
  
  

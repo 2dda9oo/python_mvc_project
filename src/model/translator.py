@@ -2,10 +2,9 @@ import xml.etree.ElementTree as ET
 import os
 from model.excel_handler import InputTranslatrionFile
 import json
-from model.locale_viewer import LocaleViewer
-from controller.locale_info import LocaleInfo
 from .excel_handler import language_code
-import json
+import re
+
 
 class Translator:
 
@@ -34,6 +33,7 @@ class Translator:
         self.content_list = list(excel_dictionary.keys())
         tree = ET.parse(self.xml_path)
         root = tree.getroot()
+
         self.process_xml_strings(root, excel_dictionary)
         
 
@@ -92,3 +92,52 @@ class Translator:
         tree.write(self.output_paths[code], encoding="utf-8", xml_declaration=True)
 
 
+    def getMatchedWordList(self):
+        print("Matched Word List:", self.matchedWordList)
+        return self.matchedWordList
+    
+    def getNotFoundList(self):
+        return self.notFoundList
+    
+    def translateMissMatched(self, content_list, excel_dictionary):
+        print("Not Found List:", self.notFoundList)
+        for text in self.notFoundList:
+            split_chars = r'[\n\(\)\-\!\$]'
+            splited_list = re.split(split_chars, text)
+            splited_list = list(filter(None, splited_list))
+            print("split content check:", splited_list)
+            is_in = True
+
+            for splitedItem in splited_list:
+                if splitedItem in content_list:
+                    is_in = True
+                else:
+                    is_in = False
+                    break
+
+            if is_in:
+                self.notFoundList.remove(text)
+                self.matchedWordList.append(text)
+
+                for code in language_code:
+                    name_content = text
+                    for splitedItem in splited_list:
+                        translations = excel_dictionary[splitedItem]
+                        translation = translations.get(code)
+                        name_content = name_content.replace(splitedItem, translation, 1)
+                        print("translation:", translation)
+                    new_string = ET.Element("string")
+                    new_string.text = name_content
+                    print("replace file content: " + ET.tostring(new_string, encoding='unicode'))
+                    self.save_xml_file(new_string, code)
+        
+
+
+class LocaleViewer:
+    def __init__(self, di_path="", xml_path=""):
+        self.di_path=di_path
+        self.inputTranslation = InputTranslatrionFile(di_path, xml_path)
+
+    #언어 리스트 가져오기
+    def get_country_name(self):
+        return self.inputTranslation.load_country()
