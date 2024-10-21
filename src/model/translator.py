@@ -4,7 +4,6 @@ from model.excel_handler import InputTranslatrionFile
 from .excel_handler import language_code
 import re
 import json
-import re
 
 
 
@@ -77,7 +76,6 @@ class Translator:
                         new_string.text = translation
 
                         self.save_xml_file(new_string, code)
-
                 self.matchedWordList.append(text)
 
             else:
@@ -98,6 +96,7 @@ class Translator:
         root = tree.getroot()
         root.append(new_string)
         tree.write(self.output_paths[code], encoding="utf-8", xml_declaration=True)
+
 
 
     #Second Stage Translate
@@ -187,4 +186,3 @@ class Translator:
                     new_string.text = name_content
                     print("replace file content: " + ET.tostring(new_string, encoding='unicode'))
                     self.save_xml_file(new_string, code)
-
