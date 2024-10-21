@@ -1,10 +1,10 @@
 import xml.etree.ElementTree as ET
 import os
 from model.excel_handler import InputTranslatrionFile
-import json
 from .excel_handler import language_code
 import re
 import json
+import re
 
 
 
@@ -77,6 +77,7 @@ class Translator:
                 print("Content List:", self.content_list)
 
                 print(f"{text} is not found in the dictionary.")
+
                 
                 for code in language_code:
                     new_string = ET.Element("string", name=name)
@@ -91,3 +92,43 @@ class Translator:
         root = tree.getroot()
         root.append(new_string)
         tree.write(self.output_paths[code], encoding="utf-8", xml_declaration=True)
+
+    def getMatchedWordList(self):
+        print("Matched Word List:", self.matchedWordList)
+        return self.matchedWordList
+    
+    def getNotFoundList(self):
+        return self.notFoundList
+    
+    def translateMissMatched(self, content_list, excel_dictionary):
+        print("Not Found List:", self.notFoundList)
+        for text in self.notFoundList:
+            split_chars = r'[\n\(\)\-\!\$]'
+            splited_list = re.split(split_chars, text)
+            splited_list = list(filter(None, splited_list))
+            print("split content check:", splited_list)
+            is_in = True
+
+            for splitedItem in splited_list:
+                if splitedItem in content_list:
+                    is_in = True
+                else:
+                    is_in = False
+                    break
+
+            if is_in:
+                self.notFoundList.remove(text)
+                self.matchedWordList.append(text)
+
+                for code in language_code:
+                    name_content = text
+                    for splitedItem in splited_list:
+                        translations = excel_dictionary[splitedItem]
+                        translation = translations.get(code)
+                        name_content = name_content.replace(splitedItem, translation, 1)
+                        print("translation:", translation)
+                    new_string = ET.Element("string")
+                    new_string.text = name_content
+                    print("replace file content: " + ET.tostring(new_string, encoding='unicode'))
+                    self.save_xml_file(new_string, code)
+        
