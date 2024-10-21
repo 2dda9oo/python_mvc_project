@@ -26,3 +26,10 @@ class TranslatorController:
         need_check_dict = self.translator.translate_xml()
         print("All Translation completed.")
 
+
+    def getMatched(self):
+        return self.translator.getMatchedWordList()
+
+    def getNotFound(self):
+        return self.translator.getNotFoundList()        
+

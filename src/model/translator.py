@@ -6,7 +6,6 @@ import re
 import json
 
 
-
 class Translator:
 
     def __init__(self, di_path="dictionary.xlsx", xml_path="strings.xml", base_dir=""):
@@ -53,8 +52,6 @@ class Translator:
         print("3nd Translation completed.")
 
         return self.need_check_dict
-
-        
 
      #각 언어 코드에 해당하는 디렉토리와 xml 파일 생성
     def create_output_directories(self, language_code, input_file_name):
@@ -109,7 +106,6 @@ class Translator:
         root = tree.getroot()
         root.append(new_string)
         tree.write(self.output_paths[code], encoding="utf-8", xml_declaration=True)
-
 
 
     #Second Stage Translate
