@@ -52,7 +52,7 @@ class Translator:
         print("3nd Translation completed.")
 
         return self.need_check_dict
-
+    
      #각 언어 코드에 해당하는 디렉토리와 xml 파일 생성
     def create_output_directories(self, language_code, input_file_name):
         for code in language_code:
@@ -88,7 +88,6 @@ class Translator:
                         self.save_xml_file(new_string, code)
                 self.matched_word_list.append(text)
 
-
             else:
                 print("Content List:", self.content_list)
 
@@ -100,7 +99,6 @@ class Translator:
                     self.save_xml_file(new_string, code)
 
                 self.not_found_list[name]=text
-
 
 
     def save_xml_file(self, new_string, code):

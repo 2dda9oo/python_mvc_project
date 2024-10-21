@@ -4,7 +4,6 @@ from model.locale_viewer import LocaleViewer
 from controller.locale_info import LocaleInfo
 
 
-
 class TranslatorController:
     def __init__(self, di_path="dictionary.xlsx", xml_path="strings.xml", base_dir="output"):
         # Translator 인스턴스 초기화
