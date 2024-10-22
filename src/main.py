@@ -171,6 +171,7 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         # button_delegate = ButtonDelegate(self.ui.tableView_3, controller=self.controller)
         # self.ui.tableView_3.setItemDelegateForColumn(2, button_delegate)
 
+    #need_check_tableView - translate btn동작 구현
     def handle_table_click(self, index):
         if index.column() == 2:  # Translation 버튼이 있는 열
             row = index.row()
@@ -179,15 +180,21 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
 
             self.some_data_change_method()
 
+    #tableView(need_check 데이터 업데이트)
     def some_data_change_method(self):
         self.need_check_dict = self.controller.return_need_check_dict() 
         self.update_table_view() 
+<<<<<<< HEAD
  
     def save_button_click(self, controller):
         if controller.getNotFound():
             controller.saveNotFoundList()
          
 
+=======
+
+
+>>>>>>> f3ac266 (main.py주석 추가)
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
