@@ -91,6 +91,9 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         self.need_check_dict = {}
         self.controller = None
 
+        self.defaultMatchedList = []
+        self.defaultNotFoundList = []
+
         # Translation 버튼 클릭 이벤트
         self.ui.tableView_3.clicked.connect(self.handle_table_click)        
 
@@ -150,10 +153,14 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         self.controller = TranslatorController(di_path=self.dict_name, xml_path=self.xml_name, base_dir=self.value_root)
         self.controller.translate()
 
-        self.matchList.setStringList(self.controller.getMatched())
-        self.notFoundList.setStringList(self.controller.getNotFound())
+        self.defaultMatchedList.extend(self.controller.getMatched())
+        self.matchList.setStringList(self.defaultMatchedList)
         self.ui.match_list.setModel(self.matchList)
+
+        self.defaultNotFoundList.extend(self.controller.getNotFound())
+        self.notFoundList.setStringList(self.defaultNotFoundList)
         self.ui.not_found_list.setModel(self.notFoundList)
+
         print("Translation completed.")
         self.need_check_dict = self.controller.return_need_check_dict()
         self.update_table_view()  # 번역이 완료된 후 테이블 뷰 업데이트
@@ -182,14 +189,12 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
 
     def some_data_change_method(self):
         self.need_check_dict = self.controller.return_need_check_dict() 
-        self.update_table_view() 
-
-
-    def some_data_change_method(self):
-        self.need_check_dict = self.controller.return_need_check_dict() 
-        self.update_table_view() 
-        self.matchList.setStringList(self.controller.getMatched())
-        self.notFoundList.setStringList(self.controller.getNotFound())
+        self.update_table_view()
+        name = self.controller.getTranslated()
+        self.defaultMatchedList.append(name)
+        self.matchList.setStringList(self.defaultMatchedList)
+        self.defaultNotFoundList.append(name)
+        self.notFoundList.setStringList(self.defaultNotFoundList)
  
     def save_button_click(self):
         if self.controller.getNotFound():

@@ -26,8 +26,6 @@ class TranslatorController:
         print("All Translation completed.")
 
 
-
-
     def return_need_check_dict(self):
         return self.translator.need_check_dict
     
@@ -41,9 +39,9 @@ class TranslatorController:
         print("handle_btn_translate!")
         self.translator.need_check_translate_btn(index)
 
-
-
-
     def saveNotFoundList(self):
         self.translator.save_txt_file()
+
+    def getTranslated(self):
+        return self.translator.getTranslatedName()
 

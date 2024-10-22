@@ -25,6 +25,8 @@ class Translator:
         self.need_check_dict = {} #체크가 필요한 리스트들 Name: {'check_text': 'Name', 'check_translation_text': 'name'}
         self.excel_dictionary = {}
 
+        self.translated_name = None
+
 
     def translate_xml(self):
         self.excel_dictionary = self.inputTranslation.load_dictionary()
@@ -264,6 +266,8 @@ class Translator:
             self.not_found_list.pop(name)
             self.need_check_dict.pop(name)
 
+            self.translated_name = name
+
                         # 상태 출력
             print("Matched Word List:", self.matched_word_list)
             print("Not Found List:", self.not_found_list)
@@ -274,4 +278,5 @@ class Translator:
             raise IndexError("error")
     
 
-        
+    def getTranslatedName(self):
+        return self.translated_name    
