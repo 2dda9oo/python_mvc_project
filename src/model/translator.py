@@ -23,25 +23,26 @@ class Translator:
         self.formatted_translation_content_dict = {} # name: {formattedText, text}-> 나중에 content로 translation_file에서 각 언어 번역 찾아야함.
         self.formatted_text_dict = {} # name: {formattedText, text}
         self.need_check_dict = {} #체크가 필요한 리스트들 Name: {'check_text': 'Name', 'check_translation_text': 'name'}
+        self.excel_dictionary = {}
 
 
     def translate_xml(self):
-        excel_dictionary = self.inputTranslation.load_dictionary()
+        self.excel_dictionary = self.inputTranslation.load_dictionary()
         # 처음 5개의 키와 값 출력
-        for i, (key, value) in enumerate(excel_dictionary.items()):
+        for i, (key, value) in enumerate(self.excel_dictionary.items()):
             if i < 5:  # 처음 5개 항목만 출력
                 print(f"Key: {key}, Value: {value}")
             else:
                 break
 
-        language_code = list(excel_dictionary[next(iter(excel_dictionary))].keys())
+        language_code = list(self.excel_dictionary[next(iter(self.excel_dictionary))].keys())
         input_file_name = os.path.basename(self.xml_path)
         self.create_output_directories(language_code, input_file_name)
-        self.content_list = list(excel_dictionary.keys())
+        self.content_list = list(self.excel_dictionary.keys())
         tree = ET.parse(self.xml_path)
         root = tree.getroot()
         #1단계 번역 시작
-        self.process_xml_strings(root, excel_dictionary)
+        self.process_xml_strings(root)
         print("1nd Translation completed.")
         #2단계 번역 시작
         self.prepare_formatted_data()
@@ -49,7 +50,7 @@ class Translator:
         print("2nd Translation completed.")
 
         #3단계 번역 시작
-        self.translateMissMatched(excel_dictionary)
+        self.translateMissMatched()
         print("3nd Translation completed.")
 
         
@@ -68,15 +69,15 @@ class Translator:
             self.output_paths[code] = output_path
 
     #번역
-    def process_xml_strings(self, root, excel_dictionary):
+    def process_xml_strings(self, root):
         for string_element in root.findall("string"):
             name = string_element.get('name')
             text = string_element.text #코드 주의
             print(f"Element: {ET.tostring(string_element, encoding='unicode')}")
             print("text: "+str(text))
             #name이 존재한다면, 번역 데이터 만들기
-            if text in self.content_list: #name->text수정
-                translations = excel_dictionary[text]
+            if text in self.content_list:
+                translations = self.excel_dictionary[text]
                 print("translations: " + json.dumps(translations))  # 딕셔너리 출력
                 for code in language_code:
                     translation = translations.get(code)
@@ -168,7 +169,7 @@ class Translator:
     
 
     #특수기호 구분 번역
-    def translateMissMatched(self, excel_dictionary):
+    def translateMissMatched(self):
         for name, text in self.not_need_check_dict.items():
             split_chars = r'[\n\(\)\-\!\$]'
             splited_list = re.split(split_chars, text)
@@ -190,7 +191,7 @@ class Translator:
                 for code in language_code:
                     name_content = text
                     for splitedItem in splited_list:
-                        translations = excel_dictionary[splitedItem]
+                        translations = self.excel_dictionary[splitedItem]
                         translation = translations.get(code)
                         name_content = name_content.replace(splitedItem, translation, 1)
                         print("translation:", translation)
@@ -207,3 +208,47 @@ class Translator:
         value_list = list(self.not_found_list.values())
         return value_list
              
+
+    def need_check_translate_btn(self,index):
+        print("need_check_translat_btn!")
+        check_translation_text = None
+        check_text = None
+        values = list(self.need_check_dict.values())
+        name = list(self.need_check_dict.keys())[index]
+        if 0 <= index < len(values):
+            check_translation_text = values[index]['check_translation_text']
+            check_text = values[index]['check_text']
+            print("name:"+str(name))
+            print("check_translation_text:"+check_translation_text)
+
+            translations = self.excel_dictionary[check_translation_text]
+            print("check_translations: " + json.dumps(translations))  # 딕셔너리 출력
+            for code in language_code:
+                translation = translations.get(code)
+                print("code-translation: " + code)
+                print("translation: " + str(translation))  # translation을 문자열로 변환
+            
+                new_string = ET.Element("string", name=name)
+                new_string.text = translation
+
+                self.save_xml_file(new_string, code)
+            print("dlwjs:")
+            print("Matched Word List:", self.matched_word_list)
+            print("Not Found List:", self.not_found_list)
+            print("Need Check Dict:", self.need_check_dict)
+
+            self.matched_word_list.append(name)
+            self.not_found_list.pop(name)
+            self.need_check_dict.pop(name)
+
+                        # 상태 출력
+            print("Matched Word List:", self.matched_word_list)
+            print("Not Found List:", self.not_found_list)
+            print("Need Check Dict:", self.need_check_dict)
+            
+            
+        else:
+            raise IndexError("error")
+    
+
+        

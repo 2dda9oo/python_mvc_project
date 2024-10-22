@@ -33,6 +33,8 @@ class TableModel(QAbstractTableModel):
                 return self._data[index.row()]['check_text']
             elif index.column() == 1:
                 return self._data[index.row()]['check_translation_text']
+            elif index.column() == 2:
+                return "Translate"  # Return "Translate" for the button column
         return None
 
     def flags(self, index):
@@ -42,46 +44,25 @@ class TableModel(QAbstractTableModel):
 
 
 
-class ButtonDelegate(QStyledItemDelegate):
-    def __init__(self, parent=None):
-        super().__init__(parent)
+# class ButtonDelegate(QStyledItemDelegate):
+#     def __init__(self, parent=None, controller=None):
+#         super().__init__(parent)
+#         self.controller = controller
 
-    def createEditor(self, parent, option, index):
-        # 버튼 생성
-        button = QPushButton("Translate", parent)
-        button.setFixedWidth(61)  # 버튼의 너비 고정
-        button.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)  # 크기 정책 설정
-        button.setStyleSheet("""
-            QPushButton {
-                background-color: #4CAF50;  /* Green */
-                color: white;
-                border: none;
-                padding: 0px;  /* 패딩을 0으로 설정 */
-                border-radius: 5px;
-                font-size: 14px;
-            }
-            QPushButton:hover {
-                background-color: #45a049;  /* Darker green */
-            }
-            QPushButton:pressed {
-                background-color: #3e8e41;  /* Even darker green */
-            }
-        """)
-        button.clicked.connect(lambda: self.on_button_clicked(index))
-        return button
+#     def createEditor(self, parent, option, index):
+#         # 버튼 생성
+#         button = QPushButton("Translate", parent)
+#         button.setFixedWidth(61)  # 버튼의 너비 고정
+#         button.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)  # 크기 정책 설정
+#         button.clicked.connect(lambda: self.on_button_clicked(index))
+#         return button
 
-    def paint(self, painter, option, index):
-        # 기본적으로 델리게이트의 기본 페인팅
-        super().paint(painter, option, index)
-
-    def sizeHint(self, option, index):
-        # 버튼의 크기 힌트를 반환
-        return QSize(61, 30)  # 너비 61, 높이 30으로 설정
-
-    def on_button_clicked(self, index):
-        # 버튼 클릭 이벤트 처리
-        print(f"Button clicked at row: {index.row()}")
-        # 실제 번역 작업을 수행하는 로직을 추가하세요
+#     def on_button_clicked(self, index):
+#         # 버튼 클릭 이벤트 처리
+#         print(f"Button clicked at row: {index.row()}")
+#         if self.controller:
+#             self.controller.btn_translate(index)
+    
 
 
 
@@ -107,6 +88,7 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         self.matchList = QStringListModel()
         self.notFoundList = QStringListModel()
         self.need_check_dict = {}
+        self.controller = None
 
         # Translation 버튼 클릭 이벤트
         self.ui.tableView_3.clicked.connect(self.handle_table_click)
@@ -130,8 +112,8 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
             self.dict_name = file_path
             self.ui.dictionary_line.setText(file_path)
 
-            controller = LocaleInfo(di_path=self.dict_name, xml_path="")
-            self.locale_list = controller.getLocaleList()
+            self.controller = LocaleInfo(di_path=self.dict_name, xml_path="")
+            self.locale_list = self.controller.getLocaleList()
             print("last local check:", self.locale_list)
 
             self.listModel.setStringList(self.locale_list)
@@ -163,15 +145,15 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
             print("Please select both translation and XML files.")
             return
        
-        controller = TranslatorController(di_path=self.dict_name, xml_path=self.xml_name, base_dir=self.value_root)
-        controller.translate()
+        self.controller = TranslatorController(di_path=self.dict_name, xml_path=self.xml_name, base_dir=self.value_root)
+        self.controller.translate()
 
-        self.matchList.setStringList(controller.getMatched())
-        self.notFoundList.setStringList(controller.getNotFound())
+        self.matchList.setStringList(self.controller.getMatched())
+        self.notFoundList.setStringList(self.controller.getNotFound())
         self.ui.match_list.setModel(self.matchList)
         self.ui.not_found_list.setModel(self.notFoundList)
         print("Translation completed.")
-        self.need_check_dict = controller.return_need_check_dict()
+        self.need_check_dict = self.controller.return_need_check_dict()
         self.update_table_view()  # 번역이 완료된 후 테이블 뷰 업데이트
 
     def update_table_view(self):
@@ -180,17 +162,21 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         self.model = TableModel(data_to_display)
         self.ui.tableView_3.setModel(self.model)
     
-
-
         # 버튼 델리게이트 설정
-        button_delegate = ButtonDelegate(self.ui.tableView_3)
-        self.ui.tableView_3.setItemDelegateForColumn(2, button_delegate)
+        # button_delegate = ButtonDelegate(self.ui.tableView_3, controller=self.controller)
+        # self.ui.tableView_3.setItemDelegateForColumn(2, button_delegate)
 
     def handle_table_click(self, index):
         if index.column() == 2:  # Translation 버튼이 있는 열
             row = index.row()
             print(f"Translate clicked for row: {row}")
-            # 실제 번역 작업 수행 로직을 추가하세요
+            self.controller.handle_btn_translate(row)
+
+            self.some_data_change_method()
+
+    def some_data_change_method(self):
+        self.need_check_dict = self.controller.return_need_check_dict() 
+        self.update_table_view() 
  
 
  

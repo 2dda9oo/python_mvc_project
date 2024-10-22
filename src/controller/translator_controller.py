@@ -25,7 +25,7 @@ class TranslatorController:
         self.translator.translate_xml()
         print("All Translation completed.")
 
-        self.translator.need_check_dict
+
 
 
     def return_need_check_dict(self):
@@ -36,5 +36,12 @@ class TranslatorController:
 
     def getNotFound(self):
         return self.translator.getNotFoundList()
+    
+    def handle_btn_translate(self, index):
+        print("handle_btn_translate!")
+        self.translator.need_check_translate_btn(index)
+
+
+
 
 
