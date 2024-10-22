@@ -185,6 +185,9 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
 
             self.some_data_change_method()
 
+            self.matchList.setStringList(self.controller.getMatched())
+            self.notFoundList.setStringList(self.controller.getNotFound())
+
     def some_data_change_method(self):
         self.need_check_dict = self.controller.return_need_check_dict() 
         self.update_table_view()
