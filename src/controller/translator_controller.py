@@ -22,14 +22,20 @@ class TranslatorController:
         print(f"xml_file: '{self.xml_path}'")
     
         #번역 시작
-        need_check_dict = self.translator.translate_xml()
+        self.translator.translate_xml()
         print("All Translation completed.")
 
+        self.translator.need_check_dict
 
+
+    def return_need_check_dict(self):
+        return self.translator.need_check_dict
+    
     def getMatched(self):
         return self.translator.getMatchedList()
 
     def getNotFound(self):
         return self.translator.getNotFoundList()
+
 
 

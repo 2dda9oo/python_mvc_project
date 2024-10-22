@@ -49,11 +49,10 @@ class Translator:
         print("2nd Translation completed.")
 
         #3단계 번역 시작
-        self.translateMissMatched(self.content_list, excel_dictionary)
+        self.translateMissMatched(excel_dictionary)
         print("3nd Translation completed.")
 
-        return self.need_check_dict
-
+        
 
      #각 언어 코드에 해당하는 디렉토리와 xml 파일 생성
     def create_output_directories(self, language_code, input_file_name):
@@ -99,13 +98,13 @@ class Translator:
                     new_string = ET.Element("string", name=name)
                     new_string.text = text
                     self.save_xml_file(new_string, code)
+
                 self.not_found_list[name]=text
 
 
     def save_xml_file(self, new_string, code):
         tree = ET.parse(self.output_paths[code])
         root = tree.getroot()
-
         modified_element = root.find(f"./string[@name='{new_string.attrib['name']}']")
         if modified_element is not None:
             modified_element.text = new_string.text
@@ -113,6 +112,8 @@ class Translator:
             root.append(new_string)
 
         tree.write(self.output_paths[code], encoding="utf-8", xml_declaration=True)
+
+
 
     #Second Stage Translate
     def prepare_formatted_data(self):
@@ -164,11 +165,10 @@ class Translator:
 
         Need_check = "\n".join([f"{key}: {value}" for key, value in self.not_need_check_dict.items()])
         print("NOT NEED\nformatted_content - content:\n" + Need_check)
-
+    
 
     #특수기호 구분 번역
-    def translateMissMatched(self, content_list, excel_dictionary):
-        
+    def translateMissMatched(self, excel_dictionary):
         for name, text in self.not_need_check_dict.items():
             split_chars = r'[\n\(\)\-\!\$]'
             splited_list = re.split(split_chars, text)
@@ -185,7 +185,6 @@ class Translator:
 
             if is_in:
                 self.not_found_list.pop(name, None)
-                
                 self.matched_word_list.append(text)
 
                 for code in language_code:
@@ -199,7 +198,7 @@ class Translator:
                     new_string.text = name_content
                     print("replace file content: " + ET.tostring(new_string, encoding='unicode'))
                     self.save_xml_file(new_string, code)
-
+    
 
     def getMatchedList(self):
         return self.matched_word_list
