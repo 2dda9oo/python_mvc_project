@@ -4,7 +4,6 @@ from model.locale_viewer import LocaleViewer
 from controller.locale_info import LocaleInfo
 
 
-
 class TranslatorController:
     def __init__(self, di_path="dictionary.xlsx", xml_path="strings.xml", base_dir="output"):
         # Translator 인스턴스 초기화
@@ -31,4 +30,11 @@ class TranslatorController:
 
     def return_need_check_dict(self):
         return self.translator.need_check_dict
+    
+    def getMatched(self):
+        return self.translator.getMatchedList()
+
+    def getNotFound(self):
+        return self.translator.getNotFoundList()
+
 

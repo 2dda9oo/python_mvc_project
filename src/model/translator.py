@@ -105,7 +105,12 @@ class Translator:
     def save_xml_file(self, new_string, code):
         tree = ET.parse(self.output_paths[code])
         root = tree.getroot()
-        root.append(new_string)
+        modified_element = root.find(f"./string[@name='{new_string.attrib['name']}']")
+        if modified_element is not None:
+            modified_element.text = new_string.text
+        else:
+            root.append(new_string)
+
         tree.write(self.output_paths[code], encoding="utf-8", xml_declaration=True)
 
 
@@ -164,10 +169,6 @@ class Translator:
 
     #특수기호 구분 번역
     def translateMissMatched(self, excel_dictionary):
-
-        text_list = list(self.not_need_check_dict.values())
-        print("Not Found List:", text_list)
-
         for name, text in self.not_need_check_dict.items():
             split_chars = r'[\n\(\)\-\!\$]'
             splited_list = re.split(split_chars, text)
@@ -183,7 +184,7 @@ class Translator:
                     break
 
             if is_in:
-                self.not_found_list.pop(text, None)
+                self.not_found_list.pop(name, None)
                 self.matched_word_list.append(text)
 
                 for code in language_code:
@@ -199,3 +200,10 @@ class Translator:
                     self.save_xml_file(new_string, code)
     
 
+    def getMatchedList(self):
+        return self.matched_word_list
+    
+    def getNotFoundList(self):
+        value_list = list(self.not_found_list.values())
+        return value_list
+             
