@@ -9,6 +9,56 @@ from openpyxl import load_workbook
 
 from PyQt5.QtWidgets import QDialog, QLineEdit, QPushButton, QFileDialog, QVBoxLayout, QApplication
 from PyQt5.QtCore import QStringListModel
+from PyQt5.QtCore import Qt, QAbstractTableModel
+from PyQt5.QtWidgets import QPushButton, QStyledItemDelegate
+from model.translator import Translator
+
+#needCheckTableView
+class TableModel(QAbstractTableModel):
+    def __init__(self, data):
+        super().__init__()
+        self._data = data
+
+    def rowCount(self, parent=None):
+        return len(self._data)
+
+    def columnCount(self, parent=None):
+        return 3  # 체크 텍스트, 번역 텍스트, 번역 버튼
+
+    def data(self, index, role):
+        if role == Qt.DisplayRole:
+            if index.column() == 0:
+                return self._data[index.row()]['check_text']
+            elif index.column() == 1:
+                return self._data[index.row()]['check_translation_text']
+        return None
+
+    def flags(self, index):
+        if index.column() == 2:  # Translation 버튼 열
+            return Qt.ItemIsEnabled | Qt.ItemIsSelectable
+        return Qt.ItemIsEnabled | Qt.ItemIsSelectable
+
+
+class ButtonDelegate(QStyledItemDelegate):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+    def createEditor(self, parent, option, index):
+        # 버튼 생성
+        button = QPushButton("Translate", parent)
+        button.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        button.clicked.connect(lambda: self.on_button_clicked(index))
+        return button
+
+    def paint(self, painter, option, index):
+        # 기본적으로 델리게이트의 기본 페인팅
+        super().paint(painter, option, index)
+
+    def on_button_clicked(self, index):
+        # 버튼 클릭 이벤트 처리
+        print(f"Button clicked at row: {index.row()}")
+        # 실제 번역 작업을 수행하는 로직을 추가하세요
+
  
 class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
  
@@ -30,6 +80,15 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         self.listModel = QStringListModel()
         self.matchList = QStringListModel()
         self.notFoundList = QStringListModel()
+        self.need_check_dict = {}  # 체크할 필요가 있는 데이터
+
+        # Translation 버튼 클릭 이벤트
+        self.ui.tableView_3.clicked.connect(self.handle_table_click)
+
+    def get_data_from_need_check_dict(self):
+        return [{'check_text': v['check_text'], 'check_translation_text': v['check_translation_text']} 
+                for v in self.need_check_dict.values()]
+
         
  
     # 번역사전 엑셀 파일 입력(단일)
@@ -81,12 +140,31 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         controller = TranslatorController(di_path=self.dict_name, xml_path=self.xml_name, base_dir=self.value_root)
         controller.translate()
 
-        self.matchList.setStringList(controller.getMatched())
-        self.notFoundList.setStringList(controller.getNotFound())
-        self.ui.match_list.setModel(self.matchList)
-        self.ui.not_found_list.setModel(self.notFoundList)
-
+        # self.matchList.setStringList(controller.getMatched())
+        # self.notFoundList.setStringList(controller.getNotFound())
+        # self.ui.match_list.setModel(self.matchList)
+        # self.ui.not_found_list.setModel(self.notFoundList)
         print("Translation completed.")
+        #self.update_table_view()  # 번역이 완료된 후 테이블 뷰 업데이트
+
+    def update_table_view(self):
+        data_to_display = self.get_data_from_need_check_dict()
+        print("테이블에 표시할 데이터:", data_to_display)  # 디버그 출력
+        self.model = TableModel(data_to_display)
+        self.ui.tableView_3.setModel(self.model)
+        self.ui.tableView_3.resizeColumnsToContents()
+
+        # 버튼 델리게이트 설정
+        button_delegate = ButtonDelegate(self.ui.tableView_3)
+        self.ui.tableView_3.setItemDelegateForColumn(2, button_delegate)
+
+    def handle_table_click(self, index):
+        if index.column() == 2:  # Translation 버튼이 있는 열
+            row = index.row()
+            print(f"Translate clicked for row: {row}")
+            # 실제 번역 작업 수행 로직을 추가하세요
+ 
+
  
  
 if __name__ == "__main__":

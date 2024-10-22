@@ -13,8 +13,8 @@ class Translator:
         self.di_path = di_path
         self.xml_path = xml_path
         self.base_dir = base_dir
-        self.matchedWordList = [] #번역된 name List들
-        self.notFoundList = {} #번역안된 text List(name-text쌍으로)
+        self.matched_word_list = [] #번역된 name List들
+        self.not_found_list = {} #번역안된 text List(name-text쌍으로)
         self.output_paths = {}
         self.inputTranslation = InputTranslatrionFile(di_path, xml_path)
         self.content_list = []
@@ -40,7 +40,20 @@ class Translator:
         self.content_list = list(excel_dictionary.keys())
         tree = ET.parse(self.xml_path)
         root = tree.getroot()
+        #1단계 번역 시작
         self.process_xml_strings(root, excel_dictionary)
+        print("1nd Translation completed.")
+        #2단계 번역 시작
+        self.prepare_formatted_data()
+        self.checkTranslate()
+        print("2nd Translation completed.")
+
+        #3단계 번역 시작
+        self.translateMissMatched(excel_dictionary)
+        print("3nd Translation completed.")
+
+        return self.need_check_dict
+
         
 
      #각 언어 코드에 해당하는 디렉토리와 xml 파일 생성
@@ -76,7 +89,7 @@ class Translator:
                         new_string.text = translation
 
                         self.save_xml_file(new_string, code)
-                self.matchedWordList.append(text)
+                self.matched_word_list.append(text)
 
             else:
                 print("Content List:", self.content_list)
@@ -88,7 +101,7 @@ class Translator:
                     new_string.text = text
                     self.save_xml_file(new_string, code)
 
-                self.notFoundList[name]=text
+                self.not_found_list[name]=text
 
 
     def save_xml_file(self, new_string, code):
@@ -100,7 +113,7 @@ class Translator:
 
 
     #Second Stage Translate
-    def prepare_formatted_data(self, content_list):
+    def prepare_formatted_data(self):
         for name, not_found_text in self.not_found_list.items():
             formatted_text = not_found_text.replace(" ","").upper()
             self.formatted_text_dict[name] = {
@@ -111,7 +124,7 @@ class Translator:
         #formatted_text_dict 확인
         formatted_items = "\n".join([f"{key}: {value}" for key, value in self.formatted_text_dict.items()])
         print("formatted_text - not_found_text:\n" + formatted_items)
-        for content in content_list:
+        for content in self.content_list:
             content_str = str(content) if content is not None else ""
             formatted_content = content_str.replace(" ","").upper()
             self.formatted_translation_content_dict[content] = formatted_content
@@ -152,7 +165,7 @@ class Translator:
     
 
     #특수기호 구분 번역
-    def translateMissMatched(self, excel_dictionary, language_code):
+    def translateMissMatched(self, excel_dictionary):
 
         text_list = list(self.not_need_check_dict.values())
         print("Not Found List:", text_list)
@@ -162,18 +175,18 @@ class Translator:
             splited_list = re.split(split_chars, text)
             splited_list = list(filter(None, splited_list))
             print("split content check:", splited_list)
-            is_in = True
+            is_in = False
 
             for splitedItem in splited_list:
-                if splitedItem in text_list:
+                if splitedItem in self.content_list:
                     is_in = True
                 else:
                     is_in = False
                     break
 
             if is_in:
-                self.notFoundList.remove(text)
-                self.matchedWordList.append(text)
+                self.not_found_list.pop(text, None)
+                self.matched_word_list.append(text)
 
                 for code in language_code:
                     name_content = text
@@ -186,3 +199,5 @@ class Translator:
                     new_string.text = name_content
                     print("replace file content: " + ET.tostring(new_string, encoding='unicode'))
                     self.save_xml_file(new_string, code)
+    
+

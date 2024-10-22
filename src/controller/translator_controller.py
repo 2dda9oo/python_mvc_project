@@ -22,13 +22,7 @@ class TranslatorController:
         
         print(f"xml_file: '{self.xml_path}'")
     
-        #1단계 번역 시작
-        self.translator.translate_xml()
-        print("Translation completed.")
-
-
-        # 번역되지 않은 리스트 및 콘텐츠 리스트 가져오기
-        not_found_list = self.translator.notFoundList
-        content_list = self.translator.content_list
-        self.start_second_stage_translation(not_found_list, content_list)
+        #번역 시작
+        need_check_dict = self.translator.translate_xml()
+        print("All Translation completed.")
 
