@@ -52,8 +52,6 @@ class Translator:
         self.translateMissMatched(excel_dictionary)
         print("3nd Translation completed.")
 
-        return self.need_check_dict
-
         
 
      #각 언어 코드에 해당하는 디렉토리와 xml 파일 생성
