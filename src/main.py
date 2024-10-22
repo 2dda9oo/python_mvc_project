@@ -140,12 +140,12 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         controller = TranslatorController(di_path=self.dict_name, xml_path=self.xml_name, base_dir=self.value_root)
         controller.translate()
 
-        # self.matchList.setStringList(controller.getMatched())
-        # self.notFoundList.setStringList(controller.getNotFound())
-        # self.ui.match_list.setModel(self.matchList)
-        # self.ui.not_found_list.setModel(self.notFoundList)
+        self.matchList.setStringList(controller.getMatched())
+        self.notFoundList.setStringList(controller.getNotFound())
+        self.ui.match_list.setModel(self.matchList)
+        self.ui.not_found_list.setModel(self.notFoundList)
         print("Translation completed.")
-        #self.update_table_view()  # 번역이 완료된 후 테이블 뷰 업데이트
+        self.update_table_view()  # 번역이 완료된 후 테이블 뷰 업데이트
 
     def update_table_view(self):
         data_to_display = self.get_data_from_need_check_dict()
