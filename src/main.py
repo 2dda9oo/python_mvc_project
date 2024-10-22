@@ -89,13 +89,20 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         self.matchList = QStringListModel()
         self.notFoundList = QStringListModel()
         self.need_check_dict = {}
-        self.controller = None
+        self.controller = None    
 
+        self.default_matched_word_list = []
+        self.default_not_found_list = []
+
+
+<<<<<<< HEAD
         self.defaultMatchedList = []
         self.defaultNotFoundList = []
 
         # Translation 버튼 클릭 이벤트
         self.ui.tableView_3.clicked.connect(self.handle_table_click)        
+=======
+>>>>>>> 24dee70 (pull받기 전 commit)
 
 
     def get_data_from_need_check_dict(self):
@@ -165,6 +172,8 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         self.need_check_dict = self.controller.return_need_check_dict()
         self.update_table_view()  # 번역이 완료된 후 테이블 뷰 업데이트
         self.ui.pushButton_3.clicked.connect(self.save_button_click)
+        self.ui.pushButton.clicked.connect(self.make_clear)
+        self.ui.tableView_3.clicked.connect(self.handle_table_click) # Translation 버튼 클릭 이벤트    
 
 
 
@@ -187,6 +196,7 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
 
             self.some_data_change_method()
 
+<<<<<<< HEAD
     def some_data_change_method(self):
         self.need_check_dict = self.controller.return_need_check_dict() 
         self.update_table_view()
@@ -195,10 +205,29 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         self.matchList.setStringList(self.defaultMatchedList)
         self.defaultNotFoundList.append(name)
         self.notFoundList.setStringList(self.defaultNotFoundList)
+=======
+
+    def some_data_change_method(self):
+        self.need_check_dict = self.controller.return_need_check_dict() 
+        self.update_table_view() 
+        self.matchList.setStringList(self.controller.getMatched())
+        self.notFoundList.setStringList(self.controller.getNotFound())
+>>>>>>> 24dee70 (pull받기 전 commit)
  
     def save_button_click(self):
         if self.controller.getNotFound():
             self.controller.saveNotFoundList()
+
+    def make_clear(self):
+        self.defaultMatchedList = []
+        self.defaultNotFoundList = []
+
+        self.matchList.setStringList([])
+        self.notFoundList.setStringList([])
+        self.ui.match_list.setModel(self.matchList)
+        self.ui.not_found_list.setModel(self.notFoundList)
+        print("Lists have been cleared.")
+
          
 
 if __name__ == "__main__":
