@@ -44,4 +44,6 @@ class TranslatorController:
 
 
 
+    def saveNotFoundList(self):
+        self.translator.save_txt_file()
 

@@ -14,6 +14,7 @@ from PyQt5.QtWidgets import QPushButton, QStyledItemDelegate
 from model.translator import Translator
 from PyQt5.QtWidgets import QStyledItemDelegate, QPushButton
 from PyQt5 import QtGui, QtWidgets
+from functools import partial
 
 #needCheckTableView
 class TableModel(QAbstractTableModel):
@@ -91,7 +92,8 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         self.controller = None
 
         # Translation 버튼 클릭 이벤트
-        self.ui.tableView_3.clicked.connect(self.handle_table_click)
+        self.ui.tableView_3.clicked.connect(self.handle_table_click)        
+
 
     def get_data_from_need_check_dict(self):
         return [{'check_text': v['check_text'], 'check_translation_text': v['check_translation_text']} 
@@ -155,6 +157,9 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         print("Translation completed.")
         self.need_check_dict = self.controller.return_need_check_dict()
         self.update_table_view()  # 번역이 완료된 후 테이블 뷰 업데이트
+        self.ui.pushButton_3.clicked.connect(partial(self.save_button_click, self.controller))
+
+
 
     def update_table_view(self):
         data_to_display = self.get_data_from_need_check_dict()
@@ -178,9 +183,11 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         self.need_check_dict = self.controller.return_need_check_dict() 
         self.update_table_view() 
  
+    def save_button_click(self, controller):
+        if controller.getNotFound():
+            controller.saveNotFoundList()
+         
 
- 
- 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)

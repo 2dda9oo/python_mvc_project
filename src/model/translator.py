@@ -103,6 +103,23 @@ class Translator:
                 self.not_found_list[name]=text
 
 
+    #elements들간 줄바꿈 적용
+    def indent(self, elem, level=0):
+        i = "\n" + level * "  "
+        if len(elem):
+            if not elem.text or not elem.text.strip():
+                elem.text = i + "  "
+            if not elem.tail or not elem.tail.strip():
+                elem.tail = i
+            for subelem in elem:
+                self.indent(subelem, level + 1)
+            if not subelem.tail or not subelem.tail.strip():
+                subelem.tail = i
+        else:
+            if level and (not elem.tail or not elem.tail.strip()):
+                elem.tail = i
+
+
     def save_xml_file(self, new_string, code):
         tree = ET.parse(self.output_paths[code])
         root = tree.getroot()
@@ -111,6 +128,8 @@ class Translator:
             modified_element.text = new_string.text
         else:
             root.append(new_string)
+
+        self.indent(root)
 
         tree.write(self.output_paths[code], encoding="utf-8", xml_declaration=True)
 
@@ -174,7 +193,7 @@ class Translator:
             split_chars = r'[\n\(\)\-\!\$]'
             splited_list = re.split(split_chars, text)
             splited_list = list(filter(None, splited_list))
-            print("split content check:", splited_list)
+            
             is_in = False
 
             for splitedItem in splited_list:
@@ -194,10 +213,8 @@ class Translator:
                         translations = self.excel_dictionary[splitedItem]
                         translation = translations.get(code)
                         name_content = name_content.replace(splitedItem, translation, 1)
-                        print("translation:", translation)
                     new_string = ET.Element("string", name=name)
                     new_string.text = name_content
-                    print("replace file content: " + ET.tostring(new_string, encoding='unicode'))
                     self.save_xml_file(new_string, code)
     
 
@@ -207,6 +224,12 @@ class Translator:
     def getNotFoundList(self):
         value_list = list(self.not_found_list.values())
         return value_list
+    
+    def save_txt_file(self):
+        with open('output.txt', 'w', encoding='utf-8') as f:
+            for item in self.not_found_list:
+                f.write(f"{item}\n")
+        print("Save txt file")
              
 
     def need_check_translate_btn(self,index):
