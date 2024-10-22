@@ -14,7 +14,7 @@ from PyQt5.QtWidgets import QPushButton, QStyledItemDelegate
 from model.translator import Translator
 from PyQt5.QtWidgets import QStyledItemDelegate, QPushButton
 from PyQt5 import QtGui, QtWidgets
-from functools import partial
+
 
 #needCheckTableView
 class TableModel(QAbstractTableModel):
@@ -157,7 +157,7 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         print("Translation completed.")
         self.need_check_dict = self.controller.return_need_check_dict()
         self.update_table_view()  # 번역이 완료된 후 테이블 뷰 업데이트
-        self.ui.pushButton_3.clicked.connect(partial(self.save_button_click, self.controller))
+        self.ui.pushButton_3.clicked.connect(self.save_button_click)
 
 
 
@@ -180,21 +180,16 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
 
             self.some_data_change_method()
 
-    #tableView(need_check 데이터 업데이트)
     def some_data_change_method(self):
         self.need_check_dict = self.controller.return_need_check_dict() 
         self.update_table_view() 
-<<<<<<< HEAD
+
  
-    def save_button_click(self, controller):
-        if controller.getNotFound():
-            controller.saveNotFoundList()
+    def save_button_click(self):
+        if self.controller.getNotFound():
+            self.controller.saveNotFoundList()
          
 
-=======
-
-
->>>>>>> f3ac266 (main.py주석 추가)
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
