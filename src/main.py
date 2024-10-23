@@ -184,7 +184,6 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
             self.controller.handle_btn_translate(row)
 
             self.some_data_change_method()
-            
 
     def some_data_change_method(self):
         self.need_check_dict = self.controller.return_need_check_dict() 
