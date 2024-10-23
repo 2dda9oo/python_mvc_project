@@ -29,7 +29,7 @@ class Ui_Dialog(object):
         self.dictionary_line = QtWidgets.QLineEdit(Dialog)
         self.dictionary_line.setGeometry(QtCore.QRect(20, 50, 371, 21))
         self.dictionary_line.setStyleSheet("background-color:rgb(255, 255, 255);\n"
-"border: 2px solid rgb(0, 200, 240);\n"
+"border: 2px solid rgb(216, 27, 27);\n"
 "")
         self.dictionary_line.setObjectName("dictionary_line")
         self.label = QtWidgets.QLabel(Dialog)
@@ -58,7 +58,7 @@ class Ui_Dialog(object):
         self.xml_line = QtWidgets.QLineEdit(Dialog)
         self.xml_line.setGeometry(QtCore.QRect(20, 100, 371, 21))
         self.xml_line.setStyleSheet("background-color:rgb(255, 255, 255);\n"
-"border: 2px solid rgb(0, 200, 240);\n"
+"border: 2px solid rgb(216, 27, 27);\n"
 "")
         self.xml_line.setObjectName("xml_line")
         self.listView = QtWidgets.QListView(Dialog)
@@ -70,12 +70,6 @@ class Ui_Dialog(object):
         self.tableView_3.setGeometry(QtCore.QRect(170, 230, 321, 511))
         self.tableView_3.setStyleSheet("background-color:rgb(255, 255, 255);")
         self.tableView_3.setObjectName("tableView_3")
-        self.tableView_3.verticalHeader().setVisible(False) #행 번호 안보이게 설정
-        # QTableView의 열 너비 설정
-        self.tableView_3.setColumnWidth(0, 131)  # check_text 열 너비
-        self.tableView_3.setColumnWidth(1, 131)  # check_translation_text 열 너비
-        self.tableView_3.setColumnWidth(2, 61)   # 버튼 열 너비
-
         self.label_3 = QtWidgets.QLabel(Dialog)
         self.label_3.setGeometry(QtCore.QRect(790, 80, 141, 16))
         font = QtGui.QFont()
@@ -123,7 +117,7 @@ class Ui_Dialog(object):
         font = QtGui.QFont()
         font.setPointSize(15)
         self.pushButton_4.setFont(font)
-        self.pushButton_4.setStyleSheet("background-color:rgb(255, 255, 69);\n"
+        self.pushButton_4.setStyleSheet("background-color:rgb(255, 245, 169);\n"
 "border: 2px solid rgb(159,159,159);\n"
 "")
         self.pushButton_4.setObjectName("pushButton_4")
@@ -177,9 +171,9 @@ class Ui_Dialog(object):
         self.pushButton = QtWidgets.QPushButton(Dialog)
         self.pushButton.setGeometry(QtCore.QRect(520, 27, 471, 31))
         font = QtGui.QFont()
-        font.setPointSize(14)
+        font.setPointSize(15)
         self.pushButton.setFont(font)
-        self.pushButton.setStyleSheet("background-color:rgb(229, 66, 1);\n"
+        self.pushButton.setStyleSheet("background-color:rgb(216, 27, 27);\n"
 "border: 2px solid rgb(159,159,159);\n"
 "")
         self.pushButton.setObjectName("pushButton")
