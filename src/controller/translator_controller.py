@@ -39,12 +39,11 @@ class TranslatorController:
         print("handle_btn_translate!")
         self.translator.need_check_translate_btn(index)
 
-    def saveNotFoundList(self):
-        self.translator.save_txt_file()
+    def saveNotFoundList(self, list):
+        self.translator.save_txt_file(list)
 
     def getTranslatedN(self):
         return self.translator.getTranslatedName()
     
     def getTranslatedT(self):
         return self.translator.getTranslatedText()
-

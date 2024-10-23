@@ -228,9 +228,9 @@ class Translator:
         value_list = list(self.not_found_list.values())
         return value_list
     
-    def save_txt_file(self):
+    def save_txt_file(self, list):
         with open('output.txt', 'w', encoding='utf-8') as f:
-            for item in self.not_found_list:
+            for item in list:
                 f.write(f"{item}\n")
         print("Save txt file")
              

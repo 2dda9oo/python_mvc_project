@@ -198,11 +198,14 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
 
     def save_button_click(self):
         if self.controller.getNotFound():
-            self.controller.saveNotFoundList()
+            self.controller.saveNotFoundList(self.defaultNotFoundList)
 
     def make_clear(self):
         self.defaultMatchedList = []
         self.defaultNotFoundList = []
+
+        self.need_check_dict.clear()
+        self.update_table_view()
 
         self.matchList.setStringList([])
         self.notFoundList.setStringList([])

@@ -1,6 +1,11 @@
-loading
-dibugging
-custom
-Name
-NAME
-debugging2
+Loading
+Digging
+Grading
+Lifting
+Custom
+Loading
+Debugging
+Digging
+Grading
+Lifting
+Custom
