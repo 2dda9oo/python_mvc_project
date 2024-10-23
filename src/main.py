@@ -44,28 +44,26 @@ class TableModel(QAbstractTableModel):
         return Qt.ItemIsEnabled | Qt.ItemIsSelectable
 
 
+class ButtonDelegate(QStyledItemDelegate):
+    def __init__(self, parent=None, controller=None):
+        super().__init__(parent)
+        self.controller = controller
 
-# class ButtonDelegate(QStyledItemDelegate):
-#     def __init__(self, parent=None, controller=None):
-#         super().__init__(parent)
-#         self.controller = controller
+    def paint(self, painter, option, index):
+        super().paint(painter, option, index)
 
-#     def createEditor(self, parent, option, index):
-#         # 버튼 생성
-#         button = QPushButton("Translate", parent)
-#         button.setFixedWidth(61)  # 버튼의 너비 고정
-#         button.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)  # 크기 정책 설정
-#         button.clicked.connect(lambda: self.on_button_clicked(index))
-#         return button
+        if index.column() == 2:
+            button_rect = option.rect
+            button_rect.adjust(5, 5, -5, -5)  # 버튼의 크기 조정
+            button_color = QtGui.QColor(200, 200, 200)  # 버튼 색상
+            painter.setBrush(button_color)
+            painter.drawRect(button_rect)  # 버튼 배경 그리기
+            painter.setPen(Qt.black)  # 텍스트 색상
+            painter.drawText(button_rect, Qt.AlignCenter, "Translate")  # 버튼 텍스트 중앙에 그리기
 
-#     def on_button_clicked(self, index):
-#         # 버튼 클릭 이벤트 처리
-#         print(f"Button clicked at row: {index.row()}")
-#         if self.controller:
-#             self.controller.btn_translate(index)
+
+
     
-
-
 
  
 class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
@@ -172,10 +170,14 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         print("테이블에 표시할 데이터:", data_to_display)  # 디버그 출력
         self.model = TableModel(data_to_display)
         self.ui.tableView_3.setModel(self.model)
+
+        self.ui.tableView_3.setColumnWidth(0,129)  # check_text 열 너비
+        self.ui.tableView_3.setColumnWidth(1, 130)  # check_translation_text 열 너비
+        self.ui.tableView_3.setColumnWidth(2, 60)   # 버튼 열 너비
     
         # 버튼 델리게이트 설정
-        # button_delegate = ButtonDelegate(self.ui.tableView_3, controller=self.controller)
-        # self.ui.tableView_3.setItemDelegateForColumn(2, button_delegate)
+        button_delegate = ButtonDelegate(self.ui.tableView_3, controller=self.controller)
+        self.ui.tableView_3.setItemDelegateForColumn(2, button_delegate)
 
     #need_check_tableView - translate btn동작 구현
     def handle_table_click(self, index):
@@ -214,6 +216,9 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         self.ui.match_list.setModel(self.matchList)
         self.ui.not_found_list.setModel(self.notFoundList)
         self.ui.tableView_3.setModel(self.need_check_model)
+        self.xml_name = None
+        self.ui.xml_line.clear()
+        self.dict_name = None
         self.ui.dictionary_line.clear() 
         print("Lists have been cleared.")
 
