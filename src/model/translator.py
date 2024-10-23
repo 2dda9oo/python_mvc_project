@@ -244,7 +244,19 @@ class Translator:
                     self.save_xml_file(new_string, code)
              
 
-    #확인 필요한 string들 translate 실행
+    def getMatchedList(self):
+        return self.matched_word_list
+    
+    def getNotFoundList(self):
+        value_list = list(self.not_found_list.values())
+        return value_list
+    
+    def save_txt_file(self, list):
+        with open('output.txt', 'w', encoding='utf-8') as f:
+            for item in list:
+                f.write(f"{item}\n")
+        print("Save txt file")
+             
     def need_check_translate_btn(self,index):
         print("need_check_translat_btn!")
         check_translation_text = None
