@@ -42,6 +42,9 @@ class TranslatorController:
     def saveNotFoundList(self):
         self.translator.save_txt_file()
 
-    def getTranslated(self):
+    def getTranslatedN(self):
         return self.translator.getTranslatedName()
+    
+    def getTranslatedT(self):
+        return self.translator.getTranslatedText()
 

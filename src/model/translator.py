@@ -26,6 +26,7 @@ class Translator:
         self.excel_dictionary = {}
 
         self.translated_name = None
+        self.transalted_text = None
 
 
     def translate_xml(self):
@@ -267,7 +268,8 @@ class Translator:
             self.need_check_dict.pop(name)
 
             self.translated_name = name
-            
+            self.transalted_text = check_text
+
 
                         # 상태 출력
             print("Matched Word List:", self.matched_word_list)
@@ -280,4 +282,7 @@ class Translator:
     
 
     def getTranslatedName(self):
-        return self.translated_name    
+        return self.translated_name
+    
+    def getTranslatedText(self):
+        return self.transalted_text

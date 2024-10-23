@@ -184,16 +184,16 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
             self.controller.handle_btn_translate(row)
 
             self.some_data_change_method()
-
             
 
     def some_data_change_method(self):
         self.need_check_dict = self.controller.return_need_check_dict() 
         self.update_table_view()
-        name = self.controller.getTranslated()
+        name = self.controller.getTranslatedN()
+        text = self.controller.getTranslatedT()
         self.defaultMatchedList.append(name)
         self.matchList.setStringList(self.defaultMatchedList)
-        self.defaultNotFoundList.remove(name)
+        self.defaultNotFoundList.remove(text)
         self.notFoundList.setStringList(self.defaultNotFoundList)
 
     def save_button_click(self):
