@@ -1,6 +1,7 @@
 from .excel_handler import InputTranslatrionFile
 
 class LocaleViewer:
+    
     def __init__(self, di_path="", xml_path=""):
         self.di_path = di_path
         self.inputTranslation = InputTranslatrionFile(di_path, xml_path)

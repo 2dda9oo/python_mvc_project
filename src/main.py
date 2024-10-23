@@ -60,11 +60,7 @@ class ButtonDelegate(QStyledItemDelegate):
             painter.drawRect(button_rect)  # 버튼 배경 그리기
             painter.setPen(Qt.black)  # 텍스트 색상
             painter.drawText(button_rect, Qt.AlignCenter, "Translate")  # 버튼 텍스트 중앙에 그리기
-
-
-
     
-
  
 class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
  
@@ -73,31 +69,32 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
  
-        # 이벤트 연결
+        # 클릭 이벤트 연결
         self.ui.di_search.clicked.connect(self.open_dictionary_dialog)  # 사전 파일 선택 버튼
         self.ui.xml_search.clicked.connect(self.open_xml_dialog)  # XML 파일 선택 버튼
         self.ui.pushButton_4.clicked.connect(self.start_translation)  # 번역 시작 버튼
- 
+
+        #ListView set Model
+        self.listModel = QStringListModel()
+        self.matchList = QStringListModel()
+        self.notFoundList = QStringListModel()
+
+        #기타 전역변수들
         self.xml_name = None   #dictionary 입력값
         self.dict_name = None  #xml 파일 입력 값
         self.value_root = None #value가 존재하는 디렉토리 경로 - 새 폴더들이 생성되어야 할 경로
         self.locale_list = {} #국가명 가져올 리스트
-
-        self.listModel = QStringListModel()
-        self.matchList = QStringListModel()
-        self.notFoundList = QStringListModel()
         self.need_check_dict = {}
         self.controller = None    
-
         self.defaultMatchedList = []
         self.defaultNotFoundList = []
         
+
 
     def get_data_from_need_check_dict(self):
         return [{'check_text': v['check_text'], 'check_translation_text': v['check_translation_text']} 
                 for v in self.need_check_dict.values()]
 
-        
  
     # 번역사전 엑셀 파일 입력(단일)
     def open_dictionary_dialog(self):
@@ -139,6 +136,7 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
             print(self.xml_name)
             print(self.value_root)
  
+
     # translation 실행
     def start_translation(self):
         if not self.dict_name or not self.xml_name:
@@ -164,7 +162,6 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         self.ui.tableView_3.clicked.connect(self.handle_table_click) # Translation 버튼 클릭 이벤트    
 
 
-
     def update_table_view(self):
         data_to_display = self.get_data_from_need_check_dict()
         print("테이블에 표시할 데이터:", data_to_display)  # 디버그 출력
@@ -178,6 +175,7 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         # 버튼 델리게이트 설정
         button_delegate = ButtonDelegate(self.ui.tableView_3, controller=self.controller)
         self.ui.tableView_3.setItemDelegateForColumn(2, button_delegate)
+
 
     #need_check_tableView - translate btn동작 구현
     def handle_table_click(self, index):
@@ -198,9 +196,11 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         self.defaultNotFoundList.remove(text)
         self.notFoundList.setStringList(self.defaultNotFoundList)
 
+
     def save_button_click(self):
         if self.controller.getNotFound():
             self.controller.saveNotFoundList(self.defaultNotFoundList)
+
 
     def make_clear(self):
         self.defaultMatchedList = []
