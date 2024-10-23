@@ -70,13 +70,11 @@ class Ui_Dialog(object):
         self.tableView_3.setGeometry(QtCore.QRect(170, 230, 321, 511))
         self.tableView_3.setStyleSheet("background-color:rgb(255, 255, 255);")
         self.tableView_3.setObjectName("tableView_3")
-        #테이블 관련 추가 설정
         self.tableView_3.verticalHeader().setVisible(False) #행 번호 안보이게 설정
         # QTableView의 열 너비 설정
         self.tableView_3.setColumnWidth(0, 131)  # check_text 열 너비
         self.tableView_3.setColumnWidth(1, 131)  # check_translation_text 열 너비
         self.tableView_3.setColumnWidth(2, 61)   # 버튼 열 너비
-
 
         self.label_3 = QtWidgets.QLabel(Dialog)
         self.label_3.setGeometry(QtCore.QRect(790, 80, 141, 16))
@@ -193,8 +191,8 @@ class Ui_Dialog(object):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.di_search.setText(_translate("Dialog", "Search"))
-        self.label.setText(_translate("Dialog", "Dictionary File"))
-        self.label_2.setText(_translate("Dialog", "Dictionary File"))
+        self.label.setText(_translate("Dialog", "Translation File"))
+        self.label_2.setText(_translate("Dialog", "String.xml File"))
         self.xml_search.setText(_translate("Dialog", "Search"))
         self.label_3.setText(_translate("Dialog", "Not Found"))
         self.label_4.setText(_translate("Dialog", "Matched word"))
@@ -204,7 +202,7 @@ class Ui_Dialog(object):
         self.pushButton_4.setText(_translate("Dialog", "Translation"))
         self.matched_text.setText(_translate("Dialog", "Find Text"))
         self.not_find_text.setText(_translate("Dialog", "not match"))
-        self.label_11.setText(_translate("Dialog", "English Text"))
-        self.label_12.setText(_translate("Dialog", "Find Text"))
+        self.label_11.setText(_translate("Dialog", "Text (String.xml)"))
+        self.label_12.setText(_translate("Dialog", "English Text(Translation)"))
         self.label_13.setText(_translate("Dialog", "Convert"))
         self.pushButton.setText(_translate("Dialog", "Clear"))

@@ -93,6 +93,7 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
 
         self.defaultMatchedList = []
         self.defaultNotFoundList = []
+        
 
     def get_data_from_need_check_dict(self):
         return [{'check_text': v['check_text'], 'check_translation_text': v['check_translation_text']} 
@@ -202,14 +203,18 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
     def make_clear(self):
         self.defaultMatchedList = []
         self.defaultNotFoundList = []
+        self.need_check_dict = {}
 
         self.need_check_dict.clear()
         self.update_table_view()
 
         self.matchList.setStringList([])
         self.notFoundList.setStringList([])
+        self.need_check_model = TableModel([])
         self.ui.match_list.setModel(self.matchList)
         self.ui.not_found_list.setModel(self.notFoundList)
+        self.ui.tableView_3.setModel(self.need_check_model)
+        self.ui.dictionary_line.clear() 
         print("Lists have been cleared.")
 
     

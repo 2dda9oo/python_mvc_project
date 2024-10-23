@@ -72,7 +72,7 @@ border: 2px solid rgb(0, 200, 240);
     </font>
    </property>
    <property name="text">
-    <string>Dictionary File</string>
+    <string>Translation File</string>
    </property>
    <property name="textFormat">
     <enum>Qt::AutoText</enum>
@@ -96,7 +96,7 @@ border: 2px solid rgb(0, 200, 240);
     </font>
    </property>
    <property name="text">
-    <string>Dictionary File</string>
+    <string>String.xml File</string>
    </property>
    <property name="textFormat">
     <enum>Qt::AutoText</enum>
@@ -370,7 +370,7 @@ border: 2px solid rgb(159,159,159);
     <number>1</number>
    </property>
    <property name="text">
-    <string>English Text</string>
+    <string>Text (String.xml)</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
@@ -395,7 +395,7 @@ border: 2px solid rgb(159,159,159);
     <number>1</number>
    </property>
    <property name="text">
-    <string>Find Text</string>
+    <string>English Text(Translation)</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
