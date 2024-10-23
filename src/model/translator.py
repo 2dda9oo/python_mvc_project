@@ -267,6 +267,7 @@ class Translator:
             self.need_check_dict.pop(name)
 
             self.translated_name = name
+            
 
                         # 상태 출력
             print("Matched Word List:", self.matched_word_list)

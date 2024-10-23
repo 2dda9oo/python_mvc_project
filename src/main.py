@@ -91,19 +91,8 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         self.need_check_dict = {}
         self.controller = None    
 
-        self.default_matched_word_list = []
-        self.default_not_found_list = []
-
-
-<<<<<<< HEAD
         self.defaultMatchedList = []
         self.defaultNotFoundList = []
-
-        # Translation 버튼 클릭 이벤트
-        self.ui.tableView_3.clicked.connect(self.handle_table_click)        
-=======
->>>>>>> 24dee70 (pull받기 전 commit)
-
 
     def get_data_from_need_check_dict(self):
         return [{'check_text': v['check_text'], 'check_translation_text': v['check_translation_text']} 
@@ -196,24 +185,15 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
 
             self.some_data_change_method()
 
-<<<<<<< HEAD
     def some_data_change_method(self):
         self.need_check_dict = self.controller.return_need_check_dict() 
         self.update_table_view()
         name = self.controller.getTranslated()
         self.defaultMatchedList.append(name)
         self.matchList.setStringList(self.defaultMatchedList)
-        self.defaultNotFoundList.append(name)
+        self.defaultNotFoundList.remove(name)
         self.notFoundList.setStringList(self.defaultNotFoundList)
-=======
 
-    def some_data_change_method(self):
-        self.need_check_dict = self.controller.return_need_check_dict() 
-        self.update_table_view() 
-        self.matchList.setStringList(self.controller.getMatched())
-        self.notFoundList.setStringList(self.controller.getNotFound())
->>>>>>> 24dee70 (pull받기 전 commit)
- 
     def save_button_click(self):
         if self.controller.getNotFound():
             self.controller.saveNotFoundList()
@@ -228,8 +208,7 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         self.ui.not_found_list.setModel(self.notFoundList)
         print("Lists have been cleared.")
 
-         
-
+    
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
