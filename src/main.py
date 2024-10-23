@@ -72,7 +72,7 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         # 클릭 이벤트 연결
         self.ui.di_search.clicked.connect(self.open_dictionary_dialog)  # 사전 파일 선택 버튼
         self.ui.xml_search.clicked.connect(self.open_xml_dialog)  # XML 파일 선택 버튼
-        self.ui.pushButton_4.clicked.connect(self.start_translation)  # 번역 시작 버튼
+        self.ui.pushButton_4.clicked.connect(self.start_translation)  # translation 버튼
 
         #ListView set Model
         self.listModel = QStringListModel()
@@ -88,6 +88,7 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         self.controller = None    
         self.defaultMatchedList = []
         self.defaultNotFoundList = []
+        self.can_translate = None
         
 
 
@@ -109,6 +110,8 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
             self.dict_name = file_path
             self.ui.dictionary_line.setText(file_path)
 
+            self.can_translate=True
+
             self.controller = LocaleInfo(di_path=self.dict_name, xml_path="")
             self.locale_list = self.controller.getLocaleList()
             print("last local check:", self.locale_list)
@@ -128,6 +131,8 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         if file_path:
             self.xml_name = file_path
             self.ui.xml_line.setText(file_path)
+
+            self.can_translate=True
  
             path_parts = file_path.replace("\\", "/").split('/')
             res_index = path_parts.index('res')
@@ -141,6 +146,9 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
     def start_translation(self):
         if not self.dict_name or not self.xml_name:
             print("Please select both translation and XML files.")
+            return
+        
+        if not self.can_translate:
             return
        
         self.controller = TranslatorController(di_path=self.dict_name, xml_path=self.xml_name, base_dir=self.value_root)
@@ -159,7 +167,8 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         self.update_table_view()  # 번역이 완료된 후 테이블 뷰 업데이트
         self.ui.pushButton_3.clicked.connect(self.save_button_click)
         self.ui.pushButton.clicked.connect(self.make_clear)
-        self.ui.tableView_3.clicked.connect(self.handle_table_click) # Translation 버튼 클릭 이벤트    
+        self.ui.tableView_3.clicked.connect(self.handle_table_click) # Translate 버튼 클릭 이벤트
+        self.can_translate = False   
 
 
     def update_table_view(self):
