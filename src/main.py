@@ -164,13 +164,14 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
 
     def update_table_view(self):
         data_to_display = self.get_data_from_need_check_dict()
-        print("테이블에 표시할 데이터:", data_to_display)  # 디버그 출력
         self.model = TableModel(data_to_display)
         self.ui.tableView_3.setModel(self.model)
+
 
         self.ui.tableView_3.setColumnWidth(0,129)  # check_text 열 너비
         self.ui.tableView_3.setColumnWidth(1, 130)  # check_translation_text 열 너비
         self.ui.tableView_3.setColumnWidth(2, 60)   # 버튼 열 너비
+        self.ui.tableView_3.verticalHeader().setVisible(False) #행 안보이게 설정
     
         # 버튼 델리게이트 설정
         button_delegate = ButtonDelegate(self.ui.tableView_3, controller=self.controller)
@@ -181,9 +182,7 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
     def handle_table_click(self, index):
         if index.column() == 2:  # Translation 버튼이 있는 열
             row = index.row()
-            print(f"Translate clicked for row: {row}")
             self.controller.handle_btn_translate(row)
-
             self.some_data_change_method()
 
     def some_data_change_method(self):

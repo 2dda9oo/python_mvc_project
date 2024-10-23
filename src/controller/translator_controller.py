@@ -40,7 +40,6 @@ class TranslatorController:
     
     #확인 필요한 string 번역 여부 결정 버튼
     def handle_btn_translate(self, index):
-        print("handle_btn_translate!")
         self.translator.need_check_translate_btn(index)
 
 

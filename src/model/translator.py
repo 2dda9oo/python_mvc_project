@@ -23,7 +23,7 @@ class Translator:
 
         self.not_need_check_dict = {} #체크가 필요없는 리스트들(key-value:name-text)
         self.formatted_translation_content_dict = {} # name: {formattedText, text}-> 나중에 content로 translation_file에서 각 언어 번역 찾아야함.
-        self.formatted_text_dict = {} # name: {formattedText, text}
+        self.formatted_text_dict = {} # 형식 name: {formattedText, text}
         self.need_check_dict = {} #체크가 필요한 리스트들 Name: {'check_text': 'Name', 'check_translation_text': 'name'}
         self.excel_dictionary = {}
 
@@ -86,7 +86,7 @@ class Translator:
         return self.transalted_text
 
 
-    #xml 파일 저장 - 중복되는 elements는 덮어쓰기
+    #xml 파일 저장 - 중복되는 elements(name)는 덮어쓰기
     def save_xml_file(self, new_string, code):
         tree = ET.parse(self.output_paths[code])
         root = tree.getroot()
@@ -96,7 +96,7 @@ class Translator:
         else:
             root.append(new_string)
 
-        self.indent(root) #줄바꿈 적용
+        self.indent(root)
 
         tree.write(self.output_paths[code], encoding="utf-8", xml_declaration=True)
 
@@ -136,10 +136,8 @@ class Translator:
     def process_xml_strings(self, root):
         for string_element in root.findall("string"):
             name = string_element.get('name')
-            text = string_element.text #코드 주의
-            print(f"Element: {ET.tostring(string_element, encoding='unicode')}")
-            print("text: "+str(text))
-            #name이 존재한다면, 번역 데이터 만들기
+            text = string_element.text
+            #translation_file에 text가 존재한다면, 언어 별로 번역하기
             if text in self.content_list:
                 translations = self.excel_dictionary[text]
 
@@ -149,13 +147,10 @@ class Translator:
                     if translation:
                         new_string = ET.Element("string", name=name)
                         new_string.text = translation
-
                         self.save_xml_file(new_string, code)
                 self.matched_word_list.append(text)
 
             else:
-                print(f"{text} is not found in the dictionary.")
-                
                 for code in language_code:
                     new_string = ET.Element("string", name=name)
                     new_string.text = text
@@ -164,7 +159,7 @@ class Translator:
                 self.not_found_list[name]=text
 
 
-    #2단계 번역 - 대소문자 구분
+    #2단계 번역 - Need Checking(대소문자, 공백 구분)
     def prepare_formatted_data(self):
         for name, not_found_text in self.not_found_list.items():
             formatted_text = not_found_text.replace(" ","").upper()
@@ -172,18 +167,10 @@ class Translator:
                 'text': not_found_text,
                 'formatted_text': formatted_text
             }
-            #self.formatted_text_dict[formatted_text]=not_found_text
-        #formatted_text_dict 확인
-        formatted_items = "\n".join([f"{key}: {value}" for key, value in self.formatted_text_dict.items()])
-        print("formatted_text - not_found_text:\n" + formatted_items)
         for content in self.content_list:
             content_str = str(content) if content is not None else ""
             formatted_content = content_str.replace(" ","").upper()
             self.formatted_translation_content_dict[content] = formatted_content
-            # self.formatted_translation_content_dict[formatted_content] = content
-        #formatted_translation_dict 확인
-        formatted_translations = "\n".join([f"{key}: {value}" for key, value in self.formatted_translation_content_dict.items()])
-        print("formatted_content - content:\n" + formatted_translations)
 
     def find_keys_by_formatted_text(self, target_formatted_text):
         for key, value in self.formatted_translation_content_dict.items():
@@ -191,9 +178,10 @@ class Translator:
                 return key
 
     def checkTranslate(self):
-        for name in self.formatted_text_dict.keys(): #name
+        for name in self.formatted_text_dict.keys():
             formatted_text = self.formatted_text_dict[name]['formatted_text']
-            if formatted_text in self.formatted_translation_content_dict.values(): #해당name이 translation에 있는지 확인 -> 있으면 need_check_dict에 추가
+            #해당name이 translation에 있는지 확인 -> 있으면 need_check_dict에 추가
+            if formatted_text in self.formatted_translation_content_dict.values():
                 name = name
                 check_text = self.formatted_text_dict[name]['text']
                 check_translation_text = self.find_keys_by_formatted_text(formatted_text)
@@ -201,16 +189,9 @@ class Translator:
                 'check_text': check_text,
                 'check_translation_text': check_translation_text
             }
-
-            else: #없으면 not_need_check_dict에 name 리스트만 
-                print(f"No check needed for: {self.formatted_text_dict[name]['text']}")
-                self.not_need_check_dict[name]=self.formatted_text_dict[name]['text'] #이건 다시 특수문자있는지 확인하면서 3단계 번역으로 넘어가기
-
-        Need_check = "\n".join([f"{key}: {value}" for key, value in self.need_check_dict.items()])
-        print("NEED\nname - content:\n" + Need_check)
-
-        Need_check = "\n".join([f"{key}: {value}" for key, value in self.not_need_check_dict.items()])
-        print("NOT NEED\nformatted_content - content:\n" + Need_check)
+            #없으면 not_need_check_dict에 key:name-vlaue:text의 ditionary형태로 추가
+            else: 
+                self.not_need_check_dict[name]=self.formatted_text_dict[name]['text']
     
 
     #3단계 번역 - 특수기호 구분
@@ -244,9 +225,8 @@ class Translator:
                     self.save_xml_file(new_string, code)
              
 
-    #확인 필요한 string들 translate 실행
+    #translate버튼 함수(need_check TableView 버튼 클릭된 경우, xml번역 실행)
     def need_check_translate_btn(self,index):
-        print("need_check_translat_btn!")
         check_translation_text = None
         check_text = None
         values = list(self.need_check_dict.values())
@@ -254,9 +234,6 @@ class Translator:
         if 0 <= index < len(values):
             check_translation_text = values[index]['check_translation_text']
             check_text = values[index]['check_text']
-            print("name:"+str(name))
-            print("check_translation_text:"+check_translation_text)
-
             translations = self.excel_dictionary[check_translation_text]
 
             for code in language_code:
