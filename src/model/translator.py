@@ -3,7 +3,6 @@ import os
 from model.excel_handler import InputTranslatrionFile
 from .excel_handler import language_code
 import re
-import json
 
 
 
@@ -16,15 +15,15 @@ class Translator:
         self.base_dir = base_dir
 
         self.inputTranslation = InputTranslatrionFile(di_path, xml_path) #excel_handler 초기화
-        self.matched_word_list = [] #번역된 name List들
-        self.not_found_list = {} #번역안된 text List(name-text쌍으로)
+        self.matched_word_list = [] #번역된 text List들
+        self.not_found_list = {} #번역안된 text dict(key-value:name-text)
         self.output_paths = {}
         self.content_list = []
 
-        self.not_need_check_dict = {} #체크가 필요없는 리스트들(key-value:name-text)
-        self.formatted_translation_content_dict = {} # name: {formattedText, text}-> 나중에 content로 translation_file에서 각 언어 번역 찾아야함.
-        self.formatted_text_dict = {} # 형식 name: {formattedText, text}
-        self.need_check_dict = {} #체크가 필요한 리스트들 Name: {'check_text': 'Name', 'check_translation_text': 'name'}
+        self.not_need_check_dict = {} #체크가 필요없는 dict(key-value:name-text)
+        self.formatted_translation_content_dict = {} # name: {formattedText, text}-2단계 번역시 사용
+        self.formatted_text_dict = {} # 형식 name: {formattedText, text}-2단계 번역시 사용
+        self.need_check_dict = {} #체크가 필요한 text dict Name: {'check_text': 'Name', 'check_translation_text': 'name'}
         self.excel_dictionary = {}
 
         self.translated_name = None
@@ -42,6 +41,8 @@ class Translator:
         self.create_output_directories(language_code, input_file_name) #번역 결과 xml 파일 저장할 directory 생성 메서드 호출
         tree = ET.parse(self.xml_path)
         root = tree.getroot()
+
+        print("Translation START!")
 
         #1단계 번역 시작
         self.process_xml_strings(root)
@@ -189,9 +190,10 @@ class Translator:
                 'check_text': check_text,
                 'check_translation_text': check_translation_text
             }
-            #없으면 not_need_check_dict에 key:name-vlaue:text의 ditionary형태로 추가
+            #없으면 not_need_check_dict에 추가
             else: 
                 self.not_need_check_dict[name]=self.formatted_text_dict[name]['text']
+    
     
 
     #3단계 번역 - 특수기호 구분

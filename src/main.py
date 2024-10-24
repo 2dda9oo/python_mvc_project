@@ -1,66 +1,15 @@
 from PyQt5 import QtWidgets
+from model.table_model import TableModel
+from model.button_delegate import ButtonDelegate
 from view.translation import Ui_Dialog
-from PyQt5.QtWidgets import QFileDialog
+
 from controller.translator_controller import TranslatorController
 from controller.translator_controller import LocaleInfo
 import os
 import warnings
-from openpyxl import load_workbook
-
-from PyQt5.QtWidgets import QDialog, QLineEdit, QPushButton, QFileDialog, QVBoxLayout, QApplication
+from PyQt5.QtWidgets import QFileDialog, QFileDialog
 from PyQt5.QtCore import QStringListModel
-from PyQt5.QtCore import Qt, QAbstractTableModel
-from PyQt5.QtWidgets import QPushButton, QStyledItemDelegate
-from model.translator import Translator
-from PyQt5.QtWidgets import QStyledItemDelegate, QPushButton
-from PyQt5 import QtGui, QtWidgets
 
-
-#needCheckTableView
-class TableModel(QAbstractTableModel):
-    def __init__(self, data):
-        super().__init__()
-        self._data = data
-
-    def rowCount(self, parent=None):
-        return len(self._data)
-
-    def columnCount(self, parent=None):
-        return 3  # 체크 텍스트, 번역 텍스트, 번역 버튼
-
-    def data(self, index, role):
-        if role == Qt.DisplayRole:
-            if index.column() == 0:
-                return self._data[index.row()]['check_text']
-            elif index.column() == 1:
-                return self._data[index.row()]['check_translation_text']
-            elif index.column() == 2:
-                return "Translate"  # Return "Translate" for the button column
-        return None
-
-    def flags(self, index):
-        if index.column() == 2:  # Translation 버튼 열
-            return Qt.ItemIsEnabled | Qt.ItemIsSelectable
-        return Qt.ItemIsEnabled | Qt.ItemIsSelectable
-
-
-class ButtonDelegate(QStyledItemDelegate):
-    def __init__(self, parent=None, controller=None):
-        super().__init__(parent)
-        self.controller = controller
-
-    def paint(self, painter, option, index):
-        super().paint(painter, option, index)
-
-        if index.column() == 2:
-            button_rect = option.rect
-            button_rect.adjust(5, 5, -5, -5)  # 버튼의 크기 조정
-            button_color = QtGui.QColor(200, 200, 200)  # 버튼 색상
-            painter.setBrush(button_color)
-            painter.drawRect(button_rect)  # 버튼 배경 그리기
-            painter.setPen(Qt.black)  # 텍스트 색상
-            painter.drawText(button_rect, Qt.AlignCenter, "Translate")  # 버튼 텍스트 중앙에 그리기
-    
  
 class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
  
@@ -84,13 +33,12 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         self.dict_name = None  #xml 파일 입력 값
         self.value_root = None #value가 존재하는 디렉토리 경로 - 새 폴더들이 생성되어야 할 경로
         self.locale_list = {} #국가명 가져올 리스트
-        self.need_check_dict = {}
+        self.need_check_dict = {} #translator에서 전달받은, need_check_tableView에 보여줄 text목록
         self.controller = None    
-        self.defaultMatchedList = []
-        self.defaultNotFoundList = []
-        self.can_translate = None
+        self.defaultMatchedList = [] #matched_word_listView에 보여줄 목록
+        self.defaultNotFoundList = []#not_found_listView에 보여줄 목록
+        self.can_translate = None #translation 버튼 작동 여부
         
-
 
     def get_data_from_need_check_dict(self):
         return [{'check_text': v['check_text'], 'check_translation_text': v['check_translation_text']} 
@@ -177,9 +125,9 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         self.ui.tableView_3.setModel(self.model)
 
 
-        self.ui.tableView_3.setColumnWidth(0,129)  # check_text 열 너비
-        self.ui.tableView_3.setColumnWidth(1, 130)  # check_translation_text 열 너비
-        self.ui.tableView_3.setColumnWidth(2, 60)   # 버튼 열 너비
+        self.ui.tableView_3.setColumnWidth(0,129)  # text 열 너비
+        self.ui.tableView_3.setColumnWidth(1, 130)  # english_text 열 너비
+        self.ui.tableView_3.setColumnWidth(2, 60)   # convert 열 너비
         self.ui.tableView_3.verticalHeader().setVisible(False) #행 안보이게 설정
     
         # 버튼 델리게이트 설정
@@ -187,9 +135,9 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         self.ui.tableView_3.setItemDelegateForColumn(2, button_delegate)
 
 
-    #need_check_tableView - translate btn동작 구현
+    #need_check_tableView - translate 버튼 동작 구현
     def handle_table_click(self, index):
-        if index.column() == 2:  # Translation 버튼이 있는 열
+        if index.column() == 2:
             row = index.row()
             self.controller.handle_btn_translate(row)
             self.some_data_change_method()
@@ -218,9 +166,12 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         self.need_check_dict.clear()
         self.update_table_view()
 
+        
+        self.listModel.setStringList([])
         self.matchList.setStringList([])
         self.notFoundList.setStringList([])
         self.need_check_model = TableModel([])
+        self.ui.listView.setModel(self.listModel)
         self.ui.match_list.setModel(self.matchList)
         self.ui.not_found_list.setModel(self.notFoundList)
         self.ui.tableView_3.setModel(self.need_check_model)
