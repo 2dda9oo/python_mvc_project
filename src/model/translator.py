@@ -137,7 +137,7 @@ class Translator:
     def process_xml_strings(self, root):
         for string_element in root.findall("string"):
             name = string_element.get('name')
-            text = string_element.text
+            text = string_element.text #코드 주의
             #translation_file에 text가 존재한다면, 언어 별로 번역하기
             if text in self.content_list:
                 translations = self.excel_dictionary[text]
@@ -151,7 +151,7 @@ class Translator:
                         self.save_xml_file(new_string, code)
                 self.matched_word_list.append(text)
 
-            else:
+            else:                
                 for code in language_code:
                     new_string = ET.Element("string", name=name)
                     new_string.text = text
@@ -256,5 +256,3 @@ class Translator:
         else:
             raise IndexError("error")
     
-
-

@@ -40,6 +40,7 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         self.can_translate = None #translation 버튼 작동 여부
         
 
+
     def get_data_from_need_check_dict(self):
         return [{'check_text': v['check_text'], 'check_translation_text': v['check_translation_text']} 
                 for v in self.need_check_dict.values()]
@@ -95,10 +96,9 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QListView):
         if not self.dict_name or not self.xml_name:
             print("Please select both translation and XML files.")
             return
-        
         if not self.can_translate:
             return
-       
+        
         self.controller = TranslatorController(di_path=self.dict_name, xml_path=self.xml_name, base_dir=self.value_root)
         self.controller.translate()
 
